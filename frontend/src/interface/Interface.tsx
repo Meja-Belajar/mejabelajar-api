@@ -49,3 +49,9 @@ export interface Live {
   title: string;
   total_watchers: number;
 }
+
+export interface RegisterUser {
+  username: string;
+  password: string;
+  email: string;
+}
