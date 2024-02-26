@@ -1,15 +1,14 @@
 import { Button, Input, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react'
 import logo from '../../public/vite.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faClose, faLeftLong, faRightLong, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { faArrowRight, faClose, faLeftLong, faPerson, faRightLong, faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useContext, useState } from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
+import Logo from '../utils/Logo'
+import { UserContext } from '../context/UserContext'
 const navigationList = [
-  "Home",
   "Announcement",
-  "Ask Mentor",
-  "Find Mentor",
   "History",
 ]
 
@@ -24,6 +23,7 @@ const Navigation: React.FC = () => {
   const handleIconClick = () => {
     setIsHidden(true);
   };
+
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
 
@@ -31,7 +31,13 @@ const Navigation: React.FC = () => {
       navigate(`/search/${search}`);
     }
   }
-  return (
+
+  const { login } = useContext(UserContext);
+
+  const location = useLocation();
+
+  if(['/login', '/register'].includes(location.pathname)) return null;
+  else return (
     <>
       <AnimatePresence>
         {
@@ -40,7 +46,7 @@ const Navigation: React.FC = () => {
               className='h-6 bg-white-accent-1 mb-3 flex items-center justify-center p-5 lato-bold transition ease-linear'
               exit={{ y: -100 }}
             >
-              <h1 className='text-red-500 peer transition ease hover:opacity-50 cursor-pointer'>50% OFF BY USING THIS VOUCHER</h1>
+              <h1 className='text-red-500 peer text-xs sm:text-md transition ease hover:opacity-50 cursor-pointer'>50% OFF BY USING THIS VOUCHER</h1>
               <FontAwesomeIcon 
                 icon={faArrowRight} 
                 className='pl-3 text-red-500 cursor-pointer transition ease-linear peer-hover:opacity:50' 
@@ -63,10 +69,7 @@ const Navigation: React.FC = () => {
             aria-label={isMenuOpen ? "Close" : "Open"}
             className='sm:hidden'
           />
-          <div className='flex items-center justify-center flex-row' >
-            <img src={logo} alt="logo" className='w-6 mb-1' />
-            <h1 className='special-font text-blue-accent-400'>MejaBelajar</h1>
-          </div>
+          <Logo />
 
         </div>
         
@@ -86,8 +89,20 @@ const Navigation: React.FC = () => {
             } 
           />
           <div className='gap-3 flex items-center'>
-            <Button variant='bordered' className='border-blue-accent-300 text-blue-accent-300 lato-bold text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/login')}>Login</Button>
-            <Button variant='shadow' className='hidden sm:flex bg-blue-accent-300 text-white lato-bold  text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/register')}>Register</Button>
+            {
+              login?.status !== 200 ? (
+                <>
+                  <Button variant='bordered' className='border-blue-accent-300 text-blue-accent-300 lato-bold text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/login')}>Login</Button>
+                  <Button variant='shadow' className='hidden sm:flex bg-blue-accent-300 text-white lato-bold  text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/register')}>Register</Button>
+                </>
+              ) : (
+                <>
+                  <Link to='/profile' className='relative w-10 overflow-hidden rounded-full mr-4'>
+                    <img src={login?.user?.account_detail?.profile_picture} alt="" className='w-full h-full' />
+                  </Link>
+                </>
+              )
+            }
           </div>
         </form>
 

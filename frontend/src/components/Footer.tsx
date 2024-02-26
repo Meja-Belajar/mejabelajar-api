@@ -6,7 +6,7 @@ import Facebook from '../../public/facebook-svgrepo-com.svg';
 const Footer: React.FC = () => {
   return (
     <>
-      <footer className='pb-10 p-2 mt-10 pt-8 border-t border-black'>
+      <footer className='pb-10 p-2 mt-10 pt-8 bg-gradient-to-l from-blue-accent-300 via-purple-500 to-purple-400 text-white'>
         <div className='p-3 sm:p-5 flex flex-row flex-wrap items-start justify-between'>
           <div className='flex flex-start flex-col'>
             <h1 className='mb-2 lato-bold'>Company</h1>
@@ -34,24 +34,24 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           <div className='flex flex-row gap-4 mt-10 sm:mt-0'>
-            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer'>
+            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer transition ease-linear hover:border-purple-500'>
               <a href="#" target='_blank' rel='noreferrer' className='w-full'>
                 <img src={Instagram} alt="instagram" className='w-full h-full' />
               </a>
             </div>
-            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer'>
+            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer transition ease-linear hover:border-purple-500'>
               <a href="" target='_blank'  rel='noreferrer' className='w-full'>
                 <img src={Twitter} alt="twitter" className='w-full h-full' />
               </a>
             </div>
-            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer'>
+            <div className='p-3 w-10 h-10 flex items-center justify-center rounded-full border border-black cursor-pointer transition ease-linear hover:border-purple-500'>
               <a href="" target='_blank'  rel='noreferrer' className='w-full'>
                 <img src={Facebook} alt="facebook" className='w-full h-full' />
               </a>
             </div>
           </div>
         </div>
-        <div>
+        <div className=''>
           <div className='flex items-center justify-center p-4'>
             <div className='border-b border-black w-full'></div>
           </div>

@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 import { getLive, getUser, loginService } from '../../services/user_service';
 import { Live, User, UserLogin } from '../../models/user_model';
 import Login from '../pages/Login';
+import { useLocation } from 'react-router-dom';
 
 interface Children {
   children: React.ReactNode
@@ -50,18 +51,26 @@ const UserProvider = ( { children } : Children ) => {
   useEffect(() => {
     
     const checkLogin = async () => {
+      setLoad(true);
       const data = await loginService(null, null);
       
       setLogin(data);
+      console.log(data);
+      
       setLoad(false);
     }
     
-    if(login && login.status !== 200) {
-      setLoad(true);
-      console.log('Checking login');
-      checkLogin();
+    checkLogin();
+  }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
     }
-  }, [login]);
+  }, [location]);
+  
 
   if(isLoad) return ( <div> loading </div> )
   else return (

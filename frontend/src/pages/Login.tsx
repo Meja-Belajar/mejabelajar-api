@@ -6,9 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginService } from '../../services/user_service'
-import logo from '../../public/vite.svg'
+
 import { UserContext } from '../context/UserContext'
 import '../assets/global.css';
+import Logo from '../utils/Logo'
 
 const Login: React.FC = () => {
   const { login, setLogin } = useContext(UserContext);
@@ -61,10 +62,7 @@ const Login: React.FC = () => {
         exit={ exit }
       > 
         <nav className='w-full h-16 mt-2 absolute top-0 flex justify-between items-center p-3 sm:p-7'>
-          <div className='flex items-center justify-center gap-2'>
-            <img src={logo} alt="logo" className='w-6 mb-1' />
-            <h1 className='special-font text-blue-accent-400'>MejaBelajar</h1>
-          </div>
+          <Logo />
           <div>
             <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
             <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/register'>REGISTER</Link>
