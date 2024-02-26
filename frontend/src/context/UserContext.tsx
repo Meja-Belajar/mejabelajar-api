@@ -1,21 +1,32 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getUser } from '../../api/api';
-import { Live, User } from '../interface/Interface';
+import { getLive, getUser, loginService } from '../../services/user_service';
+import { Live, User, UserLogin } from '../../models/user_model';
+import Login from '../pages/Login';
 
 interface Children {
   children: React.ReactNode
 }
+interface UserContent {
+  user?: User;
+  live?: Live;
+  login?: UserLogin;
+  setLogin?: (c: UserLogin) => void;
+}
 
-const UserContext = createContext({})
+const UserContext = createContext<UserContent>({})
 
 const UserProvider = ( { children } : Children ) => {
   // loading state
   const [isLoad, setLoad] = useState<boolean>(true);
 
-  const [user, setUser] = useState<User>()
-  const [live, setlive] = useState<Live>()
+  const [user, setUser] = useState<User>();
+  const [live, setlive] = useState<Live>();
+
+  const [login, setLogin] = useState<UserLogin>();
 
   useEffect(() => {
+    setLoad(true);
+
     const fetchData = async () => {
       try {
         const userData = await getUser();
@@ -36,15 +47,25 @@ const UserProvider = ( { children } : Children ) => {
     fetchData();
   }, []);
 
-  const context = {
-    user,
-    live
-  }
-
+  useEffect(() => {
+    
+    const checkLogin = async () => {
+      const data = await loginService(null, null);
+      
+      setLogin(data);
+      setLoad(false);
+    }
+    
+    if(login && login.status !== 200) {
+      setLoad(true);
+      console.log('Checking login');
+      checkLogin();
+    }
+  }, [login]);
 
   if(isLoad) return ( <div> loading </div> )
   else return (
-    <UserContext.Provider value={ context }>
+    <UserContext.Provider value={{ user, live, login, setLogin}}>
       {children}  
     </UserContext.Provider>
   )

@@ -1,14 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion }from 'framer-motion'
 import { exit, animate, initial } from '../assets/PageTransition'
 import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { login } from '../../api/api'
+import { loginService } from '../../services/user_service'
 import logo from '../../public/vite.svg'
+import { UserContext } from '../context/UserContext'
+import '../assets/global.css';
 
 const Login: React.FC = () => {
+  const { login, setLogin } = useContext(UserContext);
+
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -18,17 +22,32 @@ const Login: React.FC = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // If user is already logged in, redirect to home
+    if(login && login.status === 200) {
+      navigate('/');
+    }  
+  }, [])
+
   const formSubmit = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const data = await login(email, password);
-    console.log(data);
+      const data = await loginService(email, password);
 
-    if(data.status === 200){
-      navigate('/')
-    } else {
-      setWarn('Invalid email or password');
+      console.log(data);
+
+      if(data && setLogin && data.status === 200){
+        setLogin(data);
+        navigate('/')
+      } else {
+        setWarn('Invalid email or password');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setWarn('An error occurred during login');
       setLoading(false);
     }
   }
@@ -41,14 +60,14 @@ const Login: React.FC = () => {
         animate={ animate }
         exit={ exit }
       > 
-        <nav className='w-full h-16 border border-black absolute top-0 flex justify-between items-center p-3 sm:p-7'>
+        <nav className='w-full h-16 mt-2 absolute top-0 flex justify-between items-center p-3 sm:p-7'>
           <div className='flex items-center justify-center gap-2'>
             <img src={logo} alt="logo" className='w-6 mb-1' />
-            <h1 className='special-font text-yellow-800'>MejaBelajar</h1>
+            <h1 className='special-font text-blue-accent-400'>MejaBelajar</h1>
           </div>
           <div>
-            <Link className='lato-regular p-3' to='/'>HOME</Link>
-            <Link className='lato-regular p-3' to='/register'>REGISTER</Link>
+            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
+            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/register'>REGISTER</Link>
           </div>
         </nav>
 
@@ -97,7 +116,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className='m-3 flex items-center justify-center flex-col'>
-            <Button color='default' variant='solid' className='w-full lato-regular' type='submit' isLoading={loading}>Login</Button>
+            <Button color='default' variant='solid' className='bg-blue-accent-300 text-black w-full lato-regular' type='submit' isLoading={loading}>Login</Button>
           </div>
         </form>
 

@@ -1,4 +1,4 @@
-import { RegisterUser } from "../src/interface/Interface";
+import { RegisterUser } from "../models/user_model";
 
 // Fetch live data
 export const getLive = async () => {
@@ -36,20 +36,33 @@ export const getUser = async () => {
   }
 };
 
-export const login = async (username: string | null, password: string | null) => {
+export const loginService = async (username: string | null, password: string | null) => {
   if(username === null && password === null) {
     const cookies = document.cookie;
     if(cookies) {
       // Parse the cookies and check if the user is logged in
       // If logged in, return the user data
       // Otherwise, return null
+      return {
+        "status": 200,
+        "user": {
+          "userid": "USER0001",
+          "account_type": "USER",
+          "email": "agus@bagus.com",
+          "account_detail": {},
+          "mentor_detail": {},
+        }
+      }
     } else {
-      return null;
+      return {
+        "status": 404,
+        "user": { }
+      };
     }
   } 
 
   try {
-    const response = await fetch('../data/login_fail.json', {
+    const response = await fetch('../data/login_success.json', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +78,7 @@ export const login = async (username: string | null, password: string | null) =>
   }
 }
 
-export const register = async (registerUser : RegisterUser) => {
+export const registerService = async (registerUser : RegisterUser) => {
   try {
     const response = await fetch('../data/login_success.json', {
       method: 'POST',

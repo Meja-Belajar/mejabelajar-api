@@ -1,4 +1,5 @@
 import React from 'react';
+import '../assets/global.css';
 
 const Loading: React.FC = () => {
   return (

@@ -36,10 +36,10 @@ export interface User {
   userid: string;
   account_type: string;
   email: string;
-  password: string;
   account_detail: AccountDetail;
   mentor_detail: MentorDetail;
 }
+
 export interface Live {
   userid: string;
   thumbnail: string;
@@ -51,7 +51,12 @@ export interface Live {
 }
 
 export interface RegisterUser {
-  username: string;
+  name: string;
   password: string;
   email: string;
+}
+
+export interface UserLogin {
+  status: number;
+  user: User;
 }

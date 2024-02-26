@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { motion }from 'framer-motion'
 import { exit, animate, initial } from '../assets/PageTransition'
 import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { login } from '../../api/api'
+import { registerService } from '../../services/user_service'
 import logo from '../../public/vite.svg'
+import { UserContext } from '../context/UserContext'
+import '../assets/global.css';
 
 const Register: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -20,12 +22,20 @@ const Register: React.FC = () => {
   const [warn, setWarn] = useState<string>('');
 
   const navigate = useNavigate();
+  
+  const { login } = useContext(UserContext);
+
+  useEffect(() => {
+    if(login && login.status === 200) {
+      navigate('/');
+    }
+  }, [])
 
   const formSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    const data = await login(email, password);
+    const data = await registerService({ name, email, password });
     console.log(data);
 
     if(data.status === 200){
@@ -44,14 +54,14 @@ const Register: React.FC = () => {
         animate={ animate }
         exit={ exit }
       > 
-        <nav className='w-full h-16 border border-black flex justify-between items-center p-3 sm:p-7'>
+        <nav className='w-full h-16 mt-2 flex justify-between items-center p-3 sm:p-7'>
           <div className='flex items-center justify-center gap-2'>
             <img src={logo} alt="logo" className='w-6 mb-1' />
-            <h1 className='special-font text-yellow-800'>MejaBelajar</h1>
+            <h1 className='special-font text-blue-accent-400'>MejaBelajar</h1>
           </div>
           <div>
-            <Link className='lato-regular p-3' to='/'>HOME</Link>
-            <Link className='lato-regular p-3' to='/login'>LOGIN</Link>
+            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
+            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/login'>LOGIN</Link>
           </div>
         </nav>
 
@@ -109,7 +119,7 @@ const Register: React.FC = () => {
             </div>
 
             <div className='m-3 flex items-center justify-center flex-col'>
-              <Button color='default' variant='solid' className='w-full lato-regular' type='submit' isLoading={loading}>Register</Button>
+              <Button color='default' variant='solid' className='w-full lato-regular bg-blue-accent-300 text-black' type='submit' isLoading={loading}>Register</Button>
             </div>
           </form>
         </div>

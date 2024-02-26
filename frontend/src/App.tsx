@@ -17,13 +17,13 @@ const App: React.FC = () => {
 
           <AnimatePresence>
 
-            <Routes >
+            <Routes key="routes">
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Routes>
 
-            <Footer/>
+            <Footer key="footer"/>
           </AnimatePresence>
         
         </UserProvider>
