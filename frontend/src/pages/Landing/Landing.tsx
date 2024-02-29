@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 import { motion } from 'framer-motion'
-import Navigation from '../components/Navigation'
-import { exit, animate, initial } from '../assets/PageTransition'
-import '../assets/global.css';
-import icon from '../../public/vite.svg'
+import Navigation from '../../components/Navigation'
+import { exit, animate, initial } from '../../assets/PageTransition'
+import '../../assets/global.css';
+import icon from '../../../public/vite.svg'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Offers from '../components/Offers';
-import BecomeMentor from '../components/BecomeMentor';
-import Mentor from '../components/Mentor';
-import { UserContext } from '../context/UserContext';
+import Offers from '../../components/Offers';
+import BecomeMentor from '../../components/BecomeMentor';
+import Mentor from '../../components/Mentor';
+import { UserContext } from '../../context/UserContext';
 
 const Landing = () => {
 
@@ -65,6 +65,10 @@ const Landing = () => {
           <Offers />
           <BecomeMentor />
           <Mentor />
+
+          <div>
+            
+          </div>
         </main>    
 
 

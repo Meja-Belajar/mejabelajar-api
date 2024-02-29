@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { animate, exit, initial } from '../assets/PageTransition'
+import { animate, exit, initial } from '../../assets/PageTransition'
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faSignOut } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faCamera, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input, Textarea } from '@nextui-org/react';
 
 const Profile = () => {
@@ -30,13 +30,32 @@ const Profile = () => {
 
   return (
     <>
+      <div className='w-full mt-5 p-5 bg-gradient-to-r from-blue-accent-300 via-purple-500 to-pink-500 flex items-center justify-center'>
+        { 
+          login?.user?.account_type === 'MENTOR' && (
+            <Button className='w-[70%] sm:w-1/4 flex items-center justify-center text-white p-3' variant='bordered'
+              startContent={<FontAwesomeIcon icon={faBook} className='text-md p-2'/>}
+            >
+              FILL YOUR LOG BOOK
+            </Button>
+          )
+        }
+        { 
+          login?.user?.account_type !== 'MENTOR' && (
+            <Button className='w-[70%] sm:w-1/4 flex items-center justify-center text-white p-3' variant='bordered'
+              startContent={<FontAwesomeIcon icon={faBook} className='text-md p-2'/>}
+            >
+              VERIFY YOUR SESSION
+            </Button>
+          )
+        }
+      </div>
       <motion.div
         initial={initial}
         animate={animate}
         exit={exit}
         className='w-full p-4 mt-5'
       >
-
         <div className='ml-5 flex flex-col sm:flex-row items-start'>
           <div className='flex flex-col items-center p-2'>
             <h1 className='lato-bold mb-3 sm:hidden'>Profile Image</h1>

@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { getLive, getUser, loginService } from '../../services/user_service';
 import { Live, User, UserLogin } from '../../models/user_model';
-import Login from '../pages/Login';
+import Login from '../pages/Login/Login';
 import { useLocation } from 'react-router-dom';
 
 interface Children {
