@@ -6,10 +6,10 @@ import '../../assets/global.css';
 import icon from '../../../public/vite.svg'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Offers from '../../components/Offers';
 import BecomeMentor from '../../components/BecomeMentor';
 import Mentor from '../../components/Mentor';
 import { UserContext } from '../../context/UserContext';
+import Carousel from '../../components/Carousel';
 
 const Landing = () => {
 
@@ -62,7 +62,7 @@ const Landing = () => {
           <section className='w-full'>
 
           </section>
-          <Offers />
+          <Carousel />
           <BecomeMentor />
           <Mentor />
 

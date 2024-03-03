@@ -6,6 +6,7 @@ module.exports = {
   content: [
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -20,6 +21,23 @@ module.exports = {
         'blue-accent-200': '#b6ccd8',
         'blue-accent-300': '#71c4ef',
         'blue-accent-400': '#00668c',
+      },
+      keyframes: {
+        carousel: {
+          '0%, 18%, 85%, 100%': {
+            transform: 'translateX(0%)',
+            transitionDelay: '1s'
+          },
+          '20%, 38%, 70%, 83%': {
+            transform: 'translateX(-33.333%)',
+          },
+          '40%, 68%': {
+            transform: 'translateX(-66.666%)',
+          },
+        }
+      },
+      animation: {
+        'carousel': 'carousel 15s linear infinite',
       }
     },
   },

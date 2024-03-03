@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { motion }from 'framer-motion'
-import { exit, animate, initial } from '../../assets/PageTransition'
+import { exit, animate, initial } from '../assets/PageTransition'
 import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { registerService } from '../../../services/user_service'
+import { registerService } from '../api/services/user_service'
 import logo from '../../public/vite.svg'
-import { UserContext } from '../../context/UserContext'
-import '../../assets/global.css';
-import Logo from '../../utils/Logo'
+import { UserContext } from '../context/UserContext'
+import '../assets/global.css';
+import Logo from '../utils/Logo'
 
 const Register: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);

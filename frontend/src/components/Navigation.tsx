@@ -55,7 +55,8 @@ const Navigation: React.FC = () => {
               /> 
               <FontAwesomeIcon icon={faClose} className='cursor-pointer absolute right-5 transition ease-linear hover:opacity-50' onClick={handleIconClick} />
             </motion.div>
-          )}
+          )
+        }
       </AnimatePresence>
 
       <Navbar

@@ -1,4 +1,4 @@
-import { RegisterUser } from "../models/user_model";
+import { RegisterUser } from "../../models/user_model";
 
 // Fetch live data
 export const getLive = async () => {
@@ -15,7 +15,7 @@ export const getLive = async () => {
 // Fetch mentor data
 export const getMentor = async () => {
   try {
-    const response = await fetch('../data/user.json');
+    const response = await fetch('../data/mentor.json');
     const data = await response.json();
     return data;
   } catch (error) {

@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getUser, loginService } from '../../services/user_service';
-import { Live, User, UserLogin } from '../../models/user_model';
-import Login from '../pages/Login/Login';
+import { getLive, getMentor, getUser, loginService } from '../api/services/user_service';
+import { Live, User, UserLogin } from '../models/user_model';
+import Login from '../pages/Login';
 import { useLocation } from 'react-router-dom';
+import Loading from '../utils/Loading';
 
 interface Children {
   children: React.ReactNode
@@ -30,7 +31,7 @@ const UserProvider = ( { children } : Children ) => {
 
     const fetchData = async () => {
       try {
-        const userData = await getUser();
+        const userData = await getMentor();
         setUser(userData);
 
         const liveData = await getLive();
@@ -72,7 +73,7 @@ const UserProvider = ( { children } : Children ) => {
   }, [location]);
   
 
-  if(isLoad) return ( <div> loading </div> )
+  if(isLoad) return ( <Loading /> )
   else return (
     <UserContext.Provider value={{ user, live, login, setLogin}}>
       {children}  
