@@ -64,8 +64,8 @@ const Login: React.FC = () => {
         <nav className='w-full h-16 mt-2 absolute top-0 flex justify-between items-center p-3 sm:p-7'>
           <Logo />
           <div>
-            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
-            <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/register'>REGISTER</Link>
+            <Link className='p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
+            <Link className='p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/register'>REGISTER</Link>
           </div>
         </nav>
 
@@ -74,15 +74,14 @@ const Login: React.FC = () => {
           onSubmit={(e) => formSubmit(e)}
         >
           <div className='m-3'>
-            <h1 className='lato-bold text-xl'>Welcome back!</h1>
-            <p className='lato-regular text-sm'>create your next courses with our best perform mentor</p>
-            <p className='mb-3 lato-bold text-red-600 mt-2'>{warn}</p>
+            <h1 className='open-sans-600 text-xl'>Welcome back!</h1>
+            <p className='text-sm'>create your next courses with our best perform mentor</p>
+            <p className='mb-3 open-sans-600 text-red-600 mt-2'>{warn}</p>
           </div>
           <div className='m-3 mt-8'>
             <Input 
               type='email' 
               variant='bordered'
-              className='lato-regular' 
               label='Email / Username'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -91,7 +90,7 @@ const Login: React.FC = () => {
               type={ isVisible ? "text" : "password"}
               variant='bordered' 
               label='Password'
-              className='mt-3 lato-regular'
+              className='mt-3'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               endContent={
@@ -114,7 +113,7 @@ const Login: React.FC = () => {
           </div>
 
           <div className='m-3 flex items-center justify-center flex-col'>
-            <Button color='default' variant='solid' className='bg-blue-accent-300 text-black w-full lato-regular' type='submit' isLoading={loading}>Login</Button>
+            <Button color='default' variant='solid' className='bg-blue-accent-300 text-black w-full' type='submit' isLoading={loading}>Login</Button>
           </div>
         </form>
 

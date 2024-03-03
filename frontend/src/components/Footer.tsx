@@ -6,19 +6,19 @@ import Facebook from '../../public/facebook-svgrepo-com.svg';
 const Footer: React.FC = () => {
   return (
     <>
-      <footer className='pb-10 p-2 mt-10 pt-8 bg-gradient-to-l from-blue-accent-300 via-purple-500 to-purple-400 text-white'>
-        <div className='p-3 sm:p-5 flex flex-row flex-wrap items-start justify-between'>
+      <footer className='pb-10 p-2 pt-8 bg-gradient-to-t from-blue-accent-300 via-purple-400 to-purple-500 '>
+        <div className='p-6 sm:p-8 flex flex-col gap-10 sm:gap-0 sm:flex-row flex-wrap items-start justify-between drop-shadow-md shadow-md m-2 sm:m-10 bg-white-accent-1 rounded-xl text-black mb-10 sm:mb-5'>
           <div className='flex flex-start flex-col'>
-            <h1 className='mb-2 lato-bold'>Company</h1>
-            <ul className='lato-reguler opacity-80'>
+            <h1 className='mb-2 open-sans-600'>Company</h1>
+            <ul className='opacity-80'>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">About</a></li>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Overview</a></li>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">For the License</a></li>
             </ul>
           </div>
           <div className=''>
-            <h1 className='mb-2 lato-bold'>Communities</h1>
-            <ul className='lato-reguler opacity-80'>
+            <h1 className='mb-2 open-sans-600'>Communities</h1>
+            <ul className='opacity-80'>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">For Mentor</a></li>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Developer</a></li>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Advertising</a></li>
@@ -27,10 +27,18 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           <div>
-            <h1 className='mb-2 lato-bold'>Useful links</h1>
-            <ul className='lato-reguler opacity-80'>
+            <h1 className='mb-2 open-sans-600'>Resources</h1>
+            <ul className='opacity-80'>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Supports</a></li>
               <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Free Mobile App</a></li>
+            </ul>
+          </div>
+          <div>
+            <h1 className='mb-2 open-sans-600'>Useful links</h1>
+            <ul className='opacity-80'>
+              <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">FaQ</a></li>
+              <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Free Information</a></li>
+              <li className='mb-2 ease-in-out duration-300 hover:underline'><a href="/error">Sports</a></li>
             </ul>
           </div>
           <div className='flex flex-row gap-4 mt-10 sm:mt-0'>
@@ -51,11 +59,12 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className=''>
-          <div className='flex items-center justify-center p-4'>
-            <div className='border-b border-black w-full'></div>
+        <div className='mt-10 sm:mt-10 sm:m-7'>
+
+          <div className='mt-2 flex flex-col gap-0'>
+            <h1 className='opacity-80 ml-3'>©Copyright 2024 Meja Belajar </h1>
+            <small className='ml-3'>Jakarta, Indonesia 11480</small>
           </div>
-          <h1 className='mt-5 ml-4 opacity-80 lato-reguler'>© 2024 MejaBelajar</h1>
         </div>
       </footer>
     </>

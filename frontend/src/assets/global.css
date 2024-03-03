@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  /* font-family: ; */
-  /* line-height: ; */
-  /* font-weight: ; */
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 
   background-color: #fffefb;
   font-synthesis: none;
@@ -16,66 +16,6 @@
   overflow-x: hidden;
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-.lato-thin {
-  font-family: "Lato", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.lato-light {
-  font-family: "Lato", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.lato-regular {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.lato-bold {
-  font-family: "Lato", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.lato-black {
-  font-family: "Lato", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.lato-thin-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.lato-light-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.lato-regular-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.lato-bold-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.lato-black-italic {
-  font-family: "Lato", sans-serif;
-  font-weight: 900;
-  font-style: italic;
 }
 
 .special-font {
@@ -94,4 +34,94 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+}
+
+.open-sans-100 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.open-sans-200 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.open-sans-300 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.open-sans-600 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.open-sans-700 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.open-sans-800 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.open-sans-900 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.open-sans-100-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.open-sans-200-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.open-sans-300-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.open-sans-400-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.open-sans-600-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.open-sans-700-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.open-sans-800-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.open-sans-900-italic {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 900;
+  font-style: italic;
 }

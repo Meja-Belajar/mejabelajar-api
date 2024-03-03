@@ -1,11 +1,16 @@
 import { Card, CardBody, CardHeader, Image, Skeleton } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getMentor } from "../api/services/user_service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faRightLong } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const Mentor = () => {
   const [mentorList, setMentorList] = useState<any>();
   const [loading, setLoading] = useState<boolean>(true);
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     setLoading(true);
 
@@ -22,10 +27,11 @@ const Mentor = () => {
 
   return (
     <>
-      <div className='w-full p-3'>
-        <div className='w-full p-3 lato-bold text-2xl'>
+      <div className='relative w-full p-3'>
+        <div className='w-full p-3 open-sans-600 text-2xl flex items-center flex-row'>
 
           <h1 className='ml-3'>Find Your Mentor</h1>
+          <FontAwesomeIcon icon={faArrowRight} className="z-[99] text-black ml-3 mt-1" fade/>
         </div>
       
         <div className="w-full p-4 flex flex-row overflow-x-auto mt-3 no-scrollbar scroll-smooth">
@@ -54,13 +60,16 @@ const Mentor = () => {
                 <>
                   {
                     mentorList.map((mentor: any) => (
-                      <Card key={mentor?.userid} className="py-4 w-56 hover:scale-110 cursor-pointer border-2 shadow-none">
+                      <Card 
+                        key={mentor?.userid} 
+                        className="py-4 w-56 hover:scale-110 cursor-pointer border-2 shadow-sm"
+                      >
                         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start flex-wrap">
-                          <p className="text-tiny uppercase font-bold">{mentor?.account_detail?.binusian}</p>
+                          <p className="text-tiny uppercase open-sans-600">{mentor?.account_detail?.binusian}</p>
                           <div className="max-w-[240px] line-clamp-1 text-default-500 text-ellipsis overflow-hidden">
                             <small>{mentor?.mentor_detail?.course_list}</small>
                           </div>
-                          <h4 className="font-bold text-large">{mentor?.account_detail?.name}</h4>
+                          <h4 className="open-sans-600 text-large">{mentor?.account_detail?.name}</h4>
                         </CardHeader>
                         <CardBody className="overflow-visible py-2 flex items-center">
                           <Image
@@ -68,6 +77,9 @@ const Mentor = () => {
                             className="object-cover rounded-xl max-h-36"
                             src={mentor?.account_detail?.profile_picture}
                             width={270}
+                            onClick={() => {
+                              navigate(`/mentoring/${mentor?.userid}`);
+                            }}
                           />
                         </CardBody>
                       </Card>
@@ -80,6 +92,7 @@ const Mentor = () => {
             
           </div>
         </div>
+        <div className="absolute top-16 right-1 bg-white-accent-1 blur-md w-10 h-80 z-[99]" />
       </div> 
     </>
   )

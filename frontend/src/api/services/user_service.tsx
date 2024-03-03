@@ -40,8 +40,8 @@ export const loginService = async (username: string | null, password: string | n
   console.log(username, password)
   if(username == null && password == null) {
     const cookies = document.cookie;
-    // if(false) {
-    if(true) {
+    if(false) {
+    // if(true) {
       // Parse the cookies and check if the user is logged in
       // If logged in, return the user data
       // Otherwise, return null

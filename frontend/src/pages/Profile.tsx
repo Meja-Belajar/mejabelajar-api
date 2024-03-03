@@ -45,7 +45,7 @@ const Profile = () => {
       >
         <div className='ml-5 flex flex-col sm:flex-row items-start'>
           <div className='flex flex-col items-center p-2'>
-            <h1 className='lato-bold mb-3 sm:hidden'>Profile Image</h1>
+            <h1 className='open-sans-600 mb-3 sm:hidden'>Profile Image</h1>
             
             <div className='group w-20 sm:w-40 rounded-full relative cursor-pointer sm:mt-10'>
               <div className='hidden transition ease-in-out duration-300 group-hover:flex cursor-pointer items-center justify-center absolute top-0 w-20 sm:w-40 h-20 sm:h-40 bg-gray-500 bg-opacity-50'>

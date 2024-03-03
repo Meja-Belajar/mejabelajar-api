@@ -43,7 +43,7 @@ const Navigation: React.FC = () => {
         {
           !isHidden && (
             <motion.div 
-              className='h-6 bg-white-accent-1 mb-3 flex items-center justify-center p-5 lato-bold transition ease-linear'
+              className='h-6 bg-white-accent-1 mb-3 flex items-center justify-center p-5 open-sans-600 transition ease-linear'
               exit={{ y: -100 }}
             >
               <h1 className='text-red-500 peer text-xs sm:text-md transition ease hover:opacity-50 cursor-pointer'>50% OFF BY USING THIS VOUCHER</h1>
@@ -62,7 +62,7 @@ const Navigation: React.FC = () => {
       <Navbar
         onMenuOpenChange={setIsMenuOpen}
         shouldHideOnScroll
-        className='w-full mt-1'
+        className='w-full mt-1 p-1'
         maxWidth='xl'
       >
         <div className='flex gap-5 items-center justify-center flex-row'>
@@ -82,7 +82,7 @@ const Navigation: React.FC = () => {
             type='text'
             placeholder='search courses'
             variant='bordered'
-            className='hidden md:flex lato-regular p-3 w-full'
+            className='hidden md:flex p-3 w-full'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             startContent={
@@ -93,8 +93,8 @@ const Navigation: React.FC = () => {
             {
               login?.status !== 200 ? (
                 <>
-                  <Button variant='bordered' className='border-blue-accent-300 text-blue-accent-300 lato-bold text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/login')}>Login</Button>
-                  <Button variant='shadow' className='hidden sm:flex bg-blue-accent-300 text-white lato-bold  text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/register')}>Register</Button>
+                  <Button variant='bordered' className='border-blue-accent-300 text-blue-accent-300 open-sans-600 text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/login')}>Login</Button>
+                  <Button variant='shadow' className='hidden sm:flex bg-blue-accent-300 text-white open-sans-600  text-xs w-16 h-8 sm:w-24 sm:h-10' onClick={() => navigate('/register')}>Register</Button>
                 </>
               ) : (
                 <>
@@ -114,7 +114,7 @@ const Navigation: React.FC = () => {
                 color={
                   index === 2 ? "primary" : index === navigationList.length - 1 ? "danger" : "foreground"
                 }
-                className="w-full text-xl lato-reguler"
+                className="w-full text-xl"
                 to={`/${item.toLowerCase()}`}
               >
                 {item}
@@ -129,7 +129,7 @@ const Navigation: React.FC = () => {
           type='text'
           placeholder='search courses'
           variant='bordered'
-          className='lato-regular flex p-3 w-full md:hidden'
+          className='flex p-3 w-full md:hidden'
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           startContent={

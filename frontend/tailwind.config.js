@@ -38,6 +38,9 @@ module.exports = {
       },
       animation: {
         'carousel': 'carousel 15s linear infinite',
+      },
+      fontFamily: {
+        openSans: ['Open Sans', 'sans-serif'],
       }
     },
   },
