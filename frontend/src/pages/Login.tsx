@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { motion }from 'framer-motion'
-import { exit, animate, initial } from '../assets/PageTransition'
-import { Button, Input } from '@nextui-org/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
-import { Link, useNavigate } from 'react-router-dom'
-import { loginService } from '../api/services/user_service'
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Input } from '@nextui-org/react';
+import { motion }from 'framer-motion';
 
-import { UserContext } from '../context/UserContext'
-import '../assets/global.css';
-import Logo from '../utils/Logo'
+import { exit, animate, initial } from '@assets/PageTransition';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { loginService } from '@apis/services/user_service';
+
+import { UserContext } from '@contexts/UserContext';
+import Logo from '@utils/Logo';
+import '@assets/global.css';
 
 const Login: React.FC = () => {
   const { login, setLogin } = useContext(UserContext);

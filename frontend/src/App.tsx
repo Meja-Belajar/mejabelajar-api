@@ -1,16 +1,14 @@
-import { useEffect } from 'react'
-import './assets/global.css'
-import { Button } from '@nextui-org/react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Landing from './pages/landing_page/Landing'
 import { AnimatePresence } from 'framer-motion'
-import { UserProvider } from './context/UserContext'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Footer from './components/Footer'
-import Navigation from './components/Navigation'
-import ErrorPage from './pages/ErrorPage'
-import Profile from './pages/Profile'
+
+import Landing from '@pages/landing/Landing'
+import Login from '@pages/Login'
+import Register from '@pages/Register'
+import ErrorPage from '@pages/ErrorPage'
+import Profile from '@pages/Profile';
+
+import '@assets/global.css';
+import { UserProvider } from '@contexts/UserContext'
 
 const App: React.FC = () => {
 
@@ -20,7 +18,6 @@ const App: React.FC = () => {
         <UserProvider>
 
           <AnimatePresence>
-            <Navigation key="navigation"/>
 
             <Routes key="routes">
               <Route path="/" element={<Landing />} />
@@ -57,7 +54,6 @@ const App: React.FC = () => {
 
             </Routes>
 
-            <Footer key="footer"/>
           </AnimatePresence>
         
         </UserProvider>

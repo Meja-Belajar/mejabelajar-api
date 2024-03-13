@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
-import { animate, exit, initial } from '../assets/PageTransition'
+import { animate, exit, initial } from '@assets/PageTransition'
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
-import { UserContext } from '../context/UserContext';
+import { UserContext } from '@contexts/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBook, faCamera, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import { Button, Input, Textarea } from '@nextui-org/react';

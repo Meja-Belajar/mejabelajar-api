@@ -1,8 +1,8 @@
 import React from 'react';
-import '../assets/global.css';
-
-import logo from '../../public/vite.svg';
 import { AnimatePresence, motion } from 'framer-motion';
+
+import logo from '@public/logo.svg';
+import '@assets/global.css';
 
 const Loading: React.FC = () => {
   

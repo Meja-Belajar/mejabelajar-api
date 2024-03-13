@@ -1,12 +1,13 @@
 import { Button, Input, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react'
-import logo from '../../public/vite.svg'
+import logo from '@public/logo.svg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faClose, faLeftLong, faPerson, faRightLong, faSearch, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faClose, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
-import Logo from '../utils/Logo'
-import { UserContext } from '../context/UserContext'
+import Logo from '@utils/Logo'
+import { UserContext } from '@contexts/UserContext'
+
 const navigationList = [
   "Announcement",
   "History",

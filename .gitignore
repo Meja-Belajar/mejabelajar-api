@@ -27,5 +27,6 @@ dist-ssr
 data
 .env
 __assets__
+__test__
 
 # backend

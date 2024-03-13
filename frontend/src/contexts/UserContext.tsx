@@ -1,13 +1,13 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getMentor, getUser, loginService } from '../api/services/user_service';
-import { Live, User, UserLogin } from '../models/user_model';
-import Login from '../pages/Login';
+import { getLive, getMentor, loginService } from '@apis/services/user_service';
+import { Live, User, UserLogin } from '@models/user_model';
 import { useLocation } from 'react-router-dom';
-import Loading from '../utils/Loading';
+import Loading from '@utils/Loading';
 
 interface Children {
   children: React.ReactNode
 }
+
 interface UserContent {
   user?: User;
   live?: Live;

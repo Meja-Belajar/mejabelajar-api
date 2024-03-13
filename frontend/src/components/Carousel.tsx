@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import image from '../assets/image/aaron-burden-LNwn_A9RGHo-unsplash.jpg'
-import ss from '../assets/image/mkmui_the_teacher_stands_in_front_of_the_classroom_pointing_at__5af4cbd1-2169-49ba-9e76-127695c1f9a5.png'
-import '../assets/global.css';
+import image from '@assets/images/aaron-burden-LNwn_A9RGHo-unsplash.jpg'
+import ss from '@assets/images/mkmui_the_teacher_stands_in_front_of_the_classroom_pointing_at__5af4cbd1-2169-49ba-9e76-127695c1f9a5.png'
+import '@assets/global.css';
 
 const Carousel = () => {
 

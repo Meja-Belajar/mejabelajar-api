@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { animate, exit, initial } from '../assets/PageTransition';
-import img from '../assets/image/image-removebg-preview.png'
+import { animate, exit, initial } from '@assets/PageTransition';
+import img from '@assets/images/image-removebg-preview.png'
 import { Button } from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';

@@ -1,29 +1,34 @@
 import React, { useContext } from 'react'
 import { motion } from 'framer-motion'
-import Navigation from '../../components/Navigation'
-import { exit, animate, initial } from '../../assets/PageTransition'
-import '../../assets/global.css';
-import icon from '../../../public/vite.svg'
+import Navigation from '@components/Navigation'
+import { exit, animate, initial } from '@assets/PageTransition'
+import '@assets/global.css';
+import icon from '@public/logo.svg'
 import { faArrowLeft, faArrowRight, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import BecomeMentor from '../../components/BecomeMentor';
-import Mentor from '../../components/Mentor';
-import { UserContext } from '../../context/UserContext';
-import Carousel from '../../components/Carousel';
+import BecomeMentor from '@components/BecomeMentor';
+import Mentor from '@components/Mentor';
+import { UserContext } from '@contexts/UserContext';
+import Carousel from '@components/Carousel';
 import { Button, Skeleton } from '@nextui-org/react';
 import { Link, useNavigate } from 'react-router-dom';
+import Guest from '@pages/landing/Guest';
+import Footer from '@components/Footer';
 
 const Landing = () => {
   const navigate = useNavigate();
 
+  return <Guest />
+
   return (  
     <>
+      <Navigation />
       <motion.div
         initial={initial}
         animate={animate}
         exit={exit}
         className='bg-white-accent-1'
-      >
+        >
 
         <main className='mt-3'>
           <section className='border w-full p-5 pb-12 bg-gradient-to-r from-blue-accent-300 via-purple-500 to-pink-500 text-white'>
@@ -106,7 +111,7 @@ const Landing = () => {
                   className='w-1/2 sm:w-1/6 h-14 rounded-xl text-purple-500 bg-white-accent-1 drop-shadow-lg shadow-sm'
                   endContent={<FontAwesomeIcon icon={faArrowRight} className='ml-1' fade />}
                   onClick={() => navigate('/register')}
-                >
+                  >
                   Get started for free
                 </Button>
               </div>
@@ -117,6 +122,7 @@ const Landing = () => {
 
 
       </motion.div>
+      <Footer/>
     </>
   )
 }
