@@ -9,7 +9,7 @@ import { registerService } from '@src/apis/services/userService'
 import logo from '@public/vite.svg'
 import { UserContext } from '@contexts/UserContext'
 import '@assets/global.css';
-import Logo from '@utils/Logo'
+import Logo from '@src/components/Logo'
 import { RegisterUserSchema } from '@src/models/zod/user'
 
 interface FormFormat {
@@ -90,7 +90,7 @@ const Register = () => {
 
         <div className='w-full h-full flex items-center justify-center flex-col'>
           <form 
-            className='w-[90%] md:w-1/3 bg-white rounded-lg p-5 drop-shadow-2xl '
+            className='w-[90%] lg:w-1/3 bg-white rounded-lg p-5 drop-shadow-2xl '
             onSubmit={ handleSubmit }
           >
             <div className='m-3'>
@@ -108,7 +108,7 @@ const Register = () => {
                 value={formData.email}
                 onChange={setFormData}
               />
-              {formDataError.email && <p className='lato-regular text-red-600'>{formDataError.email}</p>}
+              {formDataError.email && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.email}</p>}
               <Input 
                 name='name'
                 type='name' 
@@ -118,7 +118,7 @@ const Register = () => {
                 value={formData.name}
                 onChange={setFormData}
               />
-              {formDataError.name && <p className='lato-regular text-red-600'>{formDataError.name}</p>}
+              {formDataError.name && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.name}</p>}
               <Input 
                 name='password'
                 type={ isVisible ? "text" : "password"}
@@ -139,7 +139,7 @@ const Register = () => {
                   </button>
                 }      
               />
-              {formDataError.password && <p className='lato-regular text-red-600'>{formDataError.password}</p>}
+              {formDataError.password && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.password}</p>}
 
             </div>
 

@@ -12,10 +12,11 @@ import { UserContext } from '@contexts/UserContext';
 import Carousel from '@components/Carousel';
 import { Button, Skeleton } from '@nextui-org/react';
 import { Link, useNavigate } from 'react-router-dom';
-import Guest from '@src/pages/Landing/Guest';
+import Guest from '@src/pages/Landing/GuestLandingPage';
 import Footer from '@components/Footer';
 
-const Landing = () => {
+// landing page for user
+const UserLanding = () => {
   const navigate = useNavigate();
 
   return <Guest />
@@ -127,4 +128,4 @@ const Landing = () => {
   )
 }
 
-export default Landing
+export default UserLanding

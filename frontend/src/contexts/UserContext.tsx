@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getMentor, loginService } from '@apis/services/userService';
-import { Live, User, UserLogin } from '@models/database/user_model';
+import { getLive, getMentor, loginService } from '@src/apis/services/userService';
+import { Live, User, UserLogin } from '@src/models/database/userModel';
 import { useLocation } from 'react-router-dom';
-import Loading from '@utils/Loading';
+import Loading from '@src/components/Loading';
 
 interface Children {
   children: React.ReactNode

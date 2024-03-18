@@ -12,13 +12,6 @@ const Profile = () => {
 
   const navigate = useNavigate();
   
-  useEffect(() => {
-    // If user is already logged in, redirect to home
-    if(!login || login?.status !== 200) {
-      navigate('/');
-    }  
-  }, [])
-  
   const [name, setName] = useState<string>(login?.user?.account_detail?.name || '');
   const [email, setEmail] = useState<string>(login?.user?.email || ''); 
   const [profile, setProfile] = useState<string>(login?.user?.account_detail?.profile_picture || '');

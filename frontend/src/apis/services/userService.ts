@@ -1,4 +1,4 @@
-import { RegisterUser } from "@src/models/database/user_model";
+import { RegisterUser } from "@src/models/database/userModel";
 
 // Fetch live data
 export const getLive = async () => {

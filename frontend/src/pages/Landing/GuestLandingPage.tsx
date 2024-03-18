@@ -1,10 +1,10 @@
 import {motion} from 'framer-motion';
 import { animate, exit, initial } from '@assets/PageTransition';
 import Footer from '@components/Footer';
-import Logo from '@utils/Logo';
+import Logo from '@src/components/Logo';
 import { Button, Input, Navbar, NavbarMenu, NavbarMenuItem, NavbarMenuToggle, Skeleton } from '@nextui-org/react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { faArrowUpRightFromSquare, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import image from '@assets/images/teacher.png';
@@ -114,13 +114,17 @@ const BestMentors = [
   },
 ]
 
-const Guest = () => {
+// Landing page for guest
+const GuestLanding = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     // do query here
+
+    navigate(`/search/${encodeURIComponent(search)}`);
   }
 
   return (
@@ -186,7 +190,7 @@ const Guest = () => {
 
           <form 
             className='w-full flex flex-col items-center justify-center py-20'
-            onSubmit={(e) => handleSearch(e) }
+            onSubmit={ handleSearch }
           >
             <div className='text-center z-10'>
               <h1 className='p-5 sm:p-0 text-6xl text-blue-accent-400 mb-0 sm:mb-5'>Discover Your Perfect <br/> Mentor Today!</h1>
@@ -329,4 +333,4 @@ const Guest = () => {
   )
 }
 
-export default Guest;
+export default GuestLanding;

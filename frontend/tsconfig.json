@@ -7,13 +7,11 @@
       "@apis/*": ["src/apis/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
-      "@configs/*": ["src/helpers/configs/*"],
       "@contexts/*": ["src/contexts/*"],
-      "@hooks/*": ["src/hooks/*"],
+      "@data/*": ["src/data/*"],
+      "@helpers/*": ["src/helpers/*"],
       "@models/*": ["src/models/*"],
       "@pages/*": ["src/pages/*"],
-      "@utils/*": ["src/utils/*"],
-      "@data/*": ["src/data/*"],
     },
     
     "target": "ES2020",
@@ -36,6 +34,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "services", "src/models/database/user_model.tsx"],
+  "include": ["src", "services", "src/models/database/userModel.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

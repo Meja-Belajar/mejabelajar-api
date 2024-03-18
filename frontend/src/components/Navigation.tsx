@@ -5,7 +5,7 @@ import { faArrowRight, faClose, faSearch } from '@fortawesome/free-solid-svg-ico
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import {AnimatePresence, motion} from 'framer-motion'
-import Logo from '@utils/Logo'
+import Logo from '@src/components/Logo'
 import { UserContext } from '@contexts/UserContext'
 
 const navigationList = [

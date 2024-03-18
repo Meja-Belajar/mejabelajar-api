@@ -9,9 +9,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { loginService } from '@src/apis/services/userService';
 
 import { UserContext } from '@contexts/UserContext';
-import Logo from '@utils/Logo';
+import Logo from '@src/components/Logo';
 import '@assets/global.css';
-import { validateLogin } from '@src/helpers/services/formValidation';
+import { validateLogin } from '@src/helpers/utils/formValidation';
 import { LoginUserSchema } from '@src/models/zod/user';
 
 interface FormFormat {
@@ -100,7 +100,7 @@ const Login = () => {
         </nav>
 
         <form 
-          className='w-[90%] md:w-1/3 bg-white rounded-lg p-5 drop-shadow-2xl'
+          className='w-[90%] lg:w-1/3 bg-white rounded-lg p-5 drop-shadow-2xl'
           onSubmit={ handleSubmit }
         >
           <div className='m-3'>
