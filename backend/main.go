@@ -13,6 +13,7 @@ func init() {
 
 func main() {
 	configs.DB.AutoMigrate(&database.Users{}, &database.Mentors{}, &database.Courses{}, &database.MentorCourses{}, &database.Bookings{})
+
 	// r := gin.Default()
 	// r.POST("/posts", controllers.PostsCreate)
 	// r.Run()

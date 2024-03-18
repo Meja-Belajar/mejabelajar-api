@@ -16,4 +16,8 @@ type Mentors struct {
 	CreatedAt          time.Time `gorm:"autoCreateTime;not null;default:now()"`
 	UpdatedAt          time.Time `gorm:"autoUpdateTime;not null;default:now()"`
 	Courses            []Courses  `gorm:"many2many:mentor_courses;"`
+
+	User        	   Users `gorm:"foreignKey:MentorID;references:ID"`
+	Bookings 		   []Bookings`gorm:"foreignKey:MentorID;references:ID"`
+
 }
