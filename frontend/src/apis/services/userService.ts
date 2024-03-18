@@ -1,9 +1,9 @@
-import { RegisterUser } from "../../models/user_model";
+import { RegisterUser } from "@src/models/database/user_model";
 
 // Fetch live data
 export const getLive = async () => {
   try {
-    const response = await fetch('../data/live.json');
+    const response = await fetch('../../data/live.json');
     const data = await response.json();
     return data;
   } catch (error) {
@@ -15,8 +15,8 @@ export const getLive = async () => {
 // Fetch mentor data
 export const getMentor = async () => {
   try {
-    const response = await fetch('../data/mentor.json');
-    const data = await response.json();
+    const response = await fetch('../../data/mentor.json');
+    const data = response.json();
     return data;
   } catch (error) {
     console.error('Error:', error);
@@ -27,8 +27,8 @@ export const getMentor = async () => {
 // Fetch user data
 export const getUser = async () => {
   try {
-    const response = await fetch('../data/user.json');
-    const data = await response.json();
+    const response = await fetch('../../data/user.json');
+    const data = response.json();
     return data;
   } catch (error) {
     console.error('Error:', error);
@@ -37,7 +37,7 @@ export const getUser = async () => {
 };
 
 export const loginService = async (username: string | null, password: string | null) => {
-  console.log(username, password)
+  // console.log(username, password) 
   if(username == null && password == null) {
     const cookies = document.cookie;
     if(false) {
@@ -74,7 +74,7 @@ export const loginService = async (username: string | null, password: string | n
   } 
 
   try {
-    const response = await fetch('../data/login_success.json', {
+    const response = await fetch('../../data/login_success.json', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ export const loginService = async (username: string | null, password: string | n
       body: JSON.stringify({ username, password }),
     });
 
-    const data = await response.json();
+    const data = response.json();
     return data;
   } catch (error) {
     console.error('Error', error);
@@ -92,7 +92,7 @@ export const loginService = async (username: string | null, password: string | n
 
 export const registerService = async (registerUser : RegisterUser) => {
   try {
-    const response = await fetch('../data/login_success.json', {
+    const response = await fetch('../../data/login_success.json', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ export const registerService = async (registerUser : RegisterUser) => {
       body: JSON.stringify(registerUser),
     });
 
-    const data = await response.json();
+    const data = response.json();
     return data;
   } catch (error) {
     console.error('Error', error);

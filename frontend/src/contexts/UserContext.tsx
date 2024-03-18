@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getMentor, loginService } from '@apis/services/user_service';
-import { Live, User, UserLogin } from '@models/user_model';
+import { getLive, getMentor, loginService } from '@apis/services/userService';
+import { Live, User, UserLogin } from '@models/database/user_model';
 import { useLocation } from 'react-router-dom';
 import Loading from '@utils/Loading';
 
@@ -31,11 +31,11 @@ const UserProvider = ( { children } : Children ) => {
 
     const fetchData = async () => {
       try {
-        const userData = await getMentor();
-        setUser(userData);
+        // const userData = await getMentor();
+        // setUser(userData);
 
-        const liveData = await getLive();
-        setlive(liveData);
+        // const liveData = await getLive();
+        // setlive(liveData);
 
         // console.log(userData); 
         // console.log(liveData); 
@@ -56,7 +56,6 @@ const UserProvider = ( { children } : Children ) => {
       const data = await loginService(null, null);
       
       setLogin(data);
-      console.log(data);
       
       setLoad(false);
     }

@@ -1,50 +1,75 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import { motion }from 'framer-motion'
 import { exit, animate, initial } from '@assets/PageTransition'
 import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
-import { registerService } from '@apis/services/user_service'
+import { registerService } from '@src/apis/services/userService'
 import logo from '@public/vite.svg'
 import { UserContext } from '@contexts/UserContext'
 import '@assets/global.css';
 import Logo from '@utils/Logo'
+import { RegisterUserSchema } from '@src/models/zod/user'
 
-const Register: React.FC = () => {
+interface FormFormat {
+  name: string,
+  email: string,
+  password: string,
+}
+
+const FormReducer = (state: FormFormat, action: any) => {
+  return {
+    ...state,
+    [action.name]: action.value
+  };
+};
+
+const Register = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  
-  
+  const [formData, setFormData] = useReducer(FormReducer, {} as FormFormat);
+  const [formDataError, setFormDataError] = useState<FormFormat>({} as FormFormat);
+
   const [warn, setWarn] = useState<string>('');
 
   const navigate = useNavigate();
   
-  const { login } = useContext(UserContext);
-
-  useEffect(() => {
-    if(login && login.status === 200) {
-      navigate('/');
-    }
-  }, [])
-
-  const formSubmit = async (e: any) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    const data = await registerService({ name, email, password });
-    console.log(data);
+    const handleRegister = async ({ name, email, password}: FormFormat) => {
+      setLoading(true);
 
-    if(data.status === 200){
-      navigate('/')
-    } else {
-      setWarn('Invalid email or password');
+      const data = await registerService({ name, email, password });
       setLoading(false);
+
+      if(data.status === 200){
+        navigate('/')
+      } else {
+        setWarn('Invalid email or password');
+      }
     }
+
+    const parsedUser = RegisterUserSchema.safeParse(formData);
+    console.log(parsedUser);
+
+    if (!parsedUser.success) {
+      const error = parsedUser.error;
+      let newErrors = {};
+      for (const issue of error.issues) {
+        newErrors = {
+          ...newErrors,
+          [issue.path[0]]: issue.message,
+        };
+      }
+      setFormDataError(newErrors as FormFormat);
+    } else {
+      handleRegister(formData);
+      setFormDataError({} as FormFormat);
+    }
+
   }
 
   return (  
@@ -66,7 +91,7 @@ const Register: React.FC = () => {
         <div className='w-full h-full flex items-center justify-center flex-col'>
           <form 
             className='w-[90%] md:w-1/3 bg-white rounded-lg p-5 drop-shadow-2xl '
-            onSubmit={(e) => formSubmit(e)}
+            onSubmit={ handleSubmit }
           >
             <div className='m-3'>
               <h1 className='lato-bold text-xl'>Hay 👋, let's become our family!</h1>
@@ -75,28 +100,33 @@ const Register: React.FC = () => {
             </div>
             <div className='m-3 mt-8'>
               <Input 
+                name='email'
                 type='email' 
                 variant='bordered'
                 className='lato-regular' 
                 label='Email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={setFormData}
               />
+              {formDataError.email && <p className='lato-regular text-red-600'>{formDataError.email}</p>}
               <Input 
+                name='name'
                 type='name' 
                 variant='bordered'
                 className='mt-3 lato-regular' 
                 label='Name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={setFormData}
               />
+              {formDataError.name && <p className='lato-regular text-red-600'>{formDataError.name}</p>}
               <Input 
+                name='password'
                 type={ isVisible ? "text" : "password"}
                 variant='bordered' 
                 label='Password'
                 className='mt-3 lato-regular'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={setFormData}
                 endContent={
                   <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
                     { 
@@ -109,6 +139,7 @@ const Register: React.FC = () => {
                   </button>
                 }      
               />
+              {formDataError.password && <p className='lato-regular text-red-600'>{formDataError.password}</p>}
 
             </div>
 
@@ -117,7 +148,7 @@ const Register: React.FC = () => {
             </div>
 
             <div className='m-3 flex items-center justify-center flex-col'>
-              <Button color='default' variant='solid' className='w-full lato-regular bg-blue-accent-300 text-black' type='submit' isLoading={loading}>Register</Button>
+              <Button type='submit' color='default' variant='solid' className='w-full lato-regular bg-blue-accent-300 text-black' isLoading={loading}>Register</Button>
             </div>
           </form>
         </div>

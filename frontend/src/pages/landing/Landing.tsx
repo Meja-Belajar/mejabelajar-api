@@ -12,7 +12,7 @@ import { UserContext } from '@contexts/UserContext';
 import Carousel from '@components/Carousel';
 import { Button, Skeleton } from '@nextui-org/react';
 import { Link, useNavigate } from 'react-router-dom';
-import Guest from '@pages/landing/Guest';
+import Guest from '@src/pages/Landing/Guest';
 import Footer from '@components/Footer';
 
 const Landing = () => {

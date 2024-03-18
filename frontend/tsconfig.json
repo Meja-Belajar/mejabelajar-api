@@ -7,7 +7,7 @@
       "@apis/*": ["src/apis/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
-      "@configs/*": ["src/configs/*"],
+      "@configs/*": ["src/helpers/configs/*"],
       "@contexts/*": ["src/contexts/*"],
       "@hooks/*": ["src/hooks/*"],
       "@models/*": ["src/models/*"],
@@ -36,6 +36,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "services", "src/models/user_model.tsx"],
+  "include": ["src", "services", "src/models/database/user_model.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

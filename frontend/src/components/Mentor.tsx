@@ -1,6 +1,6 @@
 import { Card, CardBody, CardHeader, Image, Skeleton } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { getMentor } from "@apis/services/user_service";
+import { getMentor } from "@src/apis/services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faRightLong } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";

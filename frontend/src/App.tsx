@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 
-import Landing from '@pages/landing/Landing'
+import Landing from '@src/pages/Landing/Landing'
 import Login from '@pages/Login'
 import Register from '@pages/Register'
 import ErrorPage from '@pages/ErrorPage'
@@ -9,6 +9,7 @@ import Profile from '@pages/Profile';
 
 import '@assets/global.css';
 import { UserProvider } from '@contexts/UserContext'
+import Auth from '@utils/Auth';
 
 const App: React.FC = () => {
 
@@ -23,11 +24,13 @@ const App: React.FC = () => {
               <Route path="/" element={<Landing />} />
               <Route path='*' element={<ErrorPage />}/>
               
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route element={<Auth />} >
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Route>
 
+              
               <Route path="/profile" element={<Profile />} />
-                
               <Route
                 path='/search'
                 // element={
