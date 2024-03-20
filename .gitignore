@@ -26,5 +26,7 @@ dist-ssr
 # frontend
 data
 .env
+__assets__
+__test__
 
 # backend
