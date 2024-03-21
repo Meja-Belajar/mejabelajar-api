@@ -32,10 +32,10 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		Username:       AddUserRequestDTO.UserName,
 		Email:          AddUserRequestDTO.Email,
 		Password:       hashedPassword,
-		Phone:    AddUserRequestDTO.PhoneNumber,
-		IsAvailable:    AddUserRequestDTO.IsAvailable,
+		Phone:    		AddUserRequestDTO.PhoneNumber,
+		IsActive:    AddUserRequestDTO.IsActive,
 		CreatedBy:      AddUserRequestDTO.CreatedBy,
-		ProfilePic: AddUserRequestDTO.ProfilePicture,
+		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
 	err = db.Create(&user).Error
 	if err != nil {
@@ -55,9 +55,9 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			UserName:       user.Username,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
-			IsAvailable:    user.IsAvailable,
+			IsActive:    	user.IsActive,
 			CreatedBy:      user.CreatedBy,
-			ProfilePicture: user.ProfilePic,
+			ProfilePicture: user.ProfilePicture,
 			UpdatedBy:      user.UpdatedBy,
 			CreatedAt:      user.CreatedAt,
 			UpdatedAt:      user.UpdatedAt,
