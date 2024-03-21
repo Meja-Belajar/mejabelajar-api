@@ -1,10 +1,10 @@
 package configs
 
 import (
-	"log"
-	"os"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 var DB *gorm.DB
@@ -16,4 +16,8 @@ func ConnectToDB() {
 	if err != nil {
 		log.Fatal("Fail to connect to database")
 	}
+}
+
+func GetDB() *gorm.DB{
+	return DB
 }

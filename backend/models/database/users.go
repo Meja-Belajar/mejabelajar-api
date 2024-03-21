@@ -8,7 +8,6 @@ import (
 
 type Users struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey;not null;default:uuid_generate_v4()"`
-	MentorID    uuid.UUID `gorm:"type:uuid"`
 	Username    string    `gorm:"type:varchar(30)"`
 	Email       string    `gorm:"type:varchar(50);not null;unique"`
 	Password    string    `gorm:"type:varchar(255);not null"`
@@ -21,6 +20,6 @@ type Users struct {
 	UpdatedBy   string    `gorm:"type:varchar(50);not null;default:'system'"`
 	CreatedAt   time.Time `gorm:"autoCreateTime;not null;default:now()"`
 	UpdatedAt   time.Time `gorm:"autoUpdateTime;not null;default:now()"`
-
-	Bookings 	[]Bookings`gorm:"foreignKey:UserID;references:ID"`
+	Mentor      Mentors   `gorm:"foreignKey:UserID;references:ID"`
+	Bookings []Bookings `gorm:"foreignKey:UserID;references:ID"`
 }
