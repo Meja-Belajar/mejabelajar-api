@@ -6,3 +6,8 @@ type RegisterUserOutput struct {
 	BaseOutput
 	Data responses.UserResponseDTO `json:"data"`
 }
+
+type LoginUserOutput struct {
+	BaseOutput
+	Data responses.UserResponseDTO `json:"data"`
+}

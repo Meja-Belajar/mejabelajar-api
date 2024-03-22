@@ -23,6 +23,19 @@ func RegisterUser(c *gin.Context) {
 	c.JSON(code, output)
 }
 
+func LoginUser(c *gin.Context) {
+	var LoginUserRequestDTO requests.LoginUserRequestDTO
+	if err := c.ShouldBindJSON(&LoginUserRequestDTO); err != nil {
+		outputs := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: " + err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, outputs)
+	}
+	code, output := helpers.LoginUser(LoginUserRequestDTO)
+	c.JSON(code, output)
+}
 func UserService(router *gin.Engine) {
 	router.POST("/user/register", RegisterUser)
+	router.POST("/user/login", LoginUser)
 }

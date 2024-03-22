@@ -32,8 +32,8 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		Username:       AddUserRequestDTO.UserName,
 		Email:          AddUserRequestDTO.Email,
 		Password:       hashedPassword,
-		Phone:    		AddUserRequestDTO.PhoneNumber,
-		IsActive:    AddUserRequestDTO.IsActive,
+		Phone:          AddUserRequestDTO.PhoneNumber,
+		IsActive:       AddUserRequestDTO.IsActive,
 		CreatedBy:      AddUserRequestDTO.CreatedBy,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
@@ -55,7 +55,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			UserName:       user.Username,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
-			IsActive:    	user.IsActive,
+			IsActive:       user.IsActive,
 			CreatedBy:      user.CreatedBy,
 			ProfilePicture: user.ProfilePicture,
 			UpdatedBy:      user.UpdatedBy,
@@ -65,4 +65,52 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 	}
 	return 200, output
 
+}
+
+func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}) {
+	db := configs.GetDB()
+	var user database.Users
+	err := db.Where("email = ?", LoginUserRequestDTO.Email).First(&user).Error
+	if err != nil {
+		output := outputs.NotFoundOutput{
+			Code:    404,
+			Message: "Not Found: User not found",
+		}
+		return 404, output
+	}
+
+	res, err := utils.ComparePassword(LoginUserRequestDTO.Password, user.Password)
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "compare password fail Internal Server Error: " + err.Error(),
+		}
+		return 500, output
+	}
+	if !res {
+		output := outputs.UnauthorizedOutput{
+			Code:    401,
+			Message: "Unauthorized: Wrong Password",
+		}
+		return 401, output
+	}
+	output := outputs.LoginUserOutput{
+		BaseOutput: outputs.BaseOutput{
+			Code:    200,
+			Message: "Success: Account has been created",
+		},
+		Data: responses.UserResponseDTO{
+			ID:             user.ID,
+			UserName:       user.Username,
+			Email:          user.Email,
+			PhoneNumber:    user.Phone,
+			IsActive:       user.IsActive,
+			CreatedBy:      user.CreatedBy,
+			ProfilePicture: user.ProfilePicture,
+			UpdatedBy:      user.UpdatedBy,
+			CreatedAt:      user.CreatedAt,
+			UpdatedAt:      user.UpdatedAt,
+		},
+	}
+	return 200, output
 }

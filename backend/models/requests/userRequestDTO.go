@@ -8,6 +8,11 @@ type RegisterUserRequestDTO struct {
 	ProfilePicture  string `json:"profile_picture" form:"profile_picture" binding:"omitempty"`
 	Password        string `json:"password" form:"password" binding:"required"`
 	ConfirmPassword string `json:"confirm_password" form:"confirm_password" binding:"required"`
-	IsActive     bool      `json:"is_active" form:"is_available" binding:"omitempty"`
+	IsActive        bool   `json:"is_active" form:"is_available" binding:"omitempty"`
 	CreatedBy       string `json:"created_by" form:"created_by" binding:"required"`
+}
+
+type LoginUserRequestDTO struct {
+	Email    string `json:"email" form:"email" binding:"required"`
+	Password string `json:"password" form:"password" binding: "required"`
 }
