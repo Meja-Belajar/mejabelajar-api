@@ -7,19 +7,19 @@ interface LoginAuthProps {
 }
 
 const AuthRedirector = ({ mustLogin }: LoginAuthProps) => {
-  const { login } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     // console.log(login?.status, mustLogin);
 
     // if user already login and want to access authentication page then navigate to home
-    if(login?.status === 200 && mustLogin === false) {
+    if(user?.code === 200 && mustLogin === false) {
       navigate('/');
     } 
   
     // if user not login and want to access protected page then navigate to login
-    if(login?.status !== 200 && mustLogin === true) {
+    if(user?.code !== 200 && mustLogin === true) {
       navigate('/login');
     }
   }, []);

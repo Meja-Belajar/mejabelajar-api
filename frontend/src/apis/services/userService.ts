@@ -1,5 +1,10 @@
 import { userServiceApi } from "@src/configs/envConfig";
-import { LoginUserRequest, RegisterUserRequest } from "@src/models/requests/account_request";
+import { LoginUserRequest, RegisterUserRequest } from "@src/models/requests/user_request";
+import Cookies from 'universal-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { decode } from "punycode";
+
+const cookies = new Cookies();
 
 export const registerService = async ({ 
     user_name, 
@@ -41,7 +46,6 @@ export const registerService = async ({
     return registerResponse;
   } catch(error) {
 
-    console.error('Error', error);
     throw error;  
   }
 }
@@ -63,47 +67,41 @@ export const loginService = async ({ email, password } : LoginUserRequest) => {
     if(loginResponse && loginResponse.code !== 200) {
       throw new Error(loginResponse.message);
     }
+    
+    // const decoded = jwtDecode(loginResponse.data.token);
+    
+    // jwt token
+    // cookies.set('token', loginResponse.data.token, { 
+      // expires: new Date(decoded.exp! * 1000) 
+    // });
+
+    localStorage.setItem('user', JSON.stringify(loginResponse.data));
+
     return loginResponse;
     
   } catch (error) {
-    console.error('Error', error);
+    
     throw error;  
   }
 
 }
 
-// Fetch live data
-export const getLive = async () => {
-  try {
-    const response = await fetch('../../data/live.json');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-};
+export const isLoggedService = () => {
+  // return cookies.get('token');
 
-// Fetch mentor data
-export const getMentor = async () => {
-  try {
-    const response = await fetch('../../data/mentor.json');
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
+  if(localStorage.getItem('user')) {
+    return JSON.parse(localStorage.getItem('user')!);
+  } else {
+    return null;
   }
-};
+}
 
-// Fetch user data
-export const getUser = async () => {
-  try {
-    const response = await fetch('../../data/user.json');
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
+export const logoutService = () => {
+  // cookies.remove('token');
+  // return null;
+
+  if(localStorage.getItem('user')){
+    localStorage.removeItem('user');
   }
-};
+  return null;
+}

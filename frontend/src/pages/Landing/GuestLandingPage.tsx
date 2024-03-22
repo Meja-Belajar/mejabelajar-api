@@ -8,111 +8,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { faArrowUpRightFromSquare, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import image from '@assets/images/teacher.png';
-import star from '@assets/images/icon/star.png';
+import star from '@assets/images/icon/star.svg';
 
-const Programs = [
-  {
-    title: "Feature 1",
-    desc: "description of the text at here will be added later",
-    img: "star",
-  },
-  {
-    title: "Feature 1",
-    desc: "description of the text at here will be added later",
-    img: "star",
-  },
-  {
-    title: "Feature 1",
-    desc: "description of the text at here will be added later",
-    img: "star",
-  },
-]
-
-const NavigationLists = [
-  {
-    name: "mentor",
-    link: "/mentor"
-  },
-  {
-    name: "forum",
-    link: "/forum"
-  },
-  {
-    name: "about",
-    link: "/about"
-  },
-  {
-    name: "login",
-    link: "/login"
-  }
-];
-
-const UserReviews = [
-  {
-    name: "Matt James",
-    role: "Mentor",
-    review: "with lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-    image: "",
-  },
-  {
-    name: "Matt James",
-    role: "Mentor",
-    review: "with lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-    image: "",
-  },
-  {
-    name: "Matt James",
-    role: "Mentor",
-    review: "with lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum",
-    image: "",
-  },
-];
-
-const PopularCourses = [
-  {
-    title: "Database Design",
-    img: "",
-    alt: ""
-  },
-  {
-    title: "Database Design",
-    img: "",
-    alt: ""
-  },
-  {
-    title: "Database Design",
-    img: "",
-    alt: ""
-  },
-];
-
-const BestMentors = [
-  {
-    name: "Matt James",
-    image: "",
-    degree: "Computer Science",
-  },
-  {
-    name: "Matt James",
-    image: "",
-    degree: "Computer Science",
-  },
-  {
-    name: "Matt James",
-    image: "",
-    degree: "Computer Science",
-  },
-  {
-    name: "Matt James",
-    image: "",
-    degree: "Computer Science",
-  },
-  {
-    name: "Matt James",
-    image: "",
-    degree: "Computer Science",
-  },
-]
+import '@assets/global.css';
+import BestMentors from '@assets/data/BestMentors.json';
+import Programs from '@assets/data/Programs.json';
+import UserReviews from '@assets/data/UserReviews.json';
+import PopularCourses from '@assets/data/PopularCourses.json';
+import NavigationLists from '@assets/data/NavigationLists.json';
 
 // Landing page for guest
 const GuestLanding = () => {
@@ -122,7 +25,6 @@ const GuestLanding = () => {
 
   const handleSearch: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    // do query here
 
     navigate(`/search/${encodeURIComponent(search)}`);
   }
@@ -303,16 +205,16 @@ const GuestLanding = () => {
         </section>
         
         <section className='mt-20 md:mt-32 p-10 w-full bg-gradient-to-r from-purple-500 to-blue-accent-300'>
-          <div className='text-white p-3 border border-black'>
+          <div className='text-white p-3'>
             <h1 className='open-sans-600 text-3xl'>Our Best Mentor</h1>
             <p>Congratulations to our top mentor for the odd semester, whose exceptional performance and dedication have set a new standard for excellence in mentorship.</p>
           </div>
 
-          <div className='p-4 mt-10 flex flex-col md:flex-row gap-3 justify-center'>
+          <div className='p-4 mt-10 flex flex-col items-center md:flex-row gap-3 justify-center'>
             {
               BestMentors.map((item, index) => (
-                <div key={index} className='border border-black p-4'>
-                  <div className='w-full border border-black p-3 h-28 rounded-2xl mb-3'>
+                <div key={index} className='p-4 flex flex-col items-center'>
+                  <div className='w-full p-3 aspect-square bg-white rounded-2xl mb-3'>
                     <img src={item.image} />
                   </div>
                   <div className='text-white text-center'>
@@ -325,7 +227,60 @@ const GuestLanding = () => {
 
           </div>
         </section>
+        
+        <section className='mt-16 pt-10 flex flex-col'>
+          <div className='w-full flex flex-row items-center justify-center'>
+            <h1 className='open-sans-600 text-3xl text-blue-accent-400'>Our Popular Course</h1>
+          </div>
+          <div className='flex flex-col sm:flex-row gap-3 sm:gap-10 px-2 items-center justify-center  mt-20 '>
+            {
+              PopularCourses.map((item, index) => (
+                <div key={index} className='w-1/2 sm:w-1/5 p-5 flex flex-col justify-center items-center rounded-xl shadow-purple-500 bg-purple-500 drop-shadow-2xl aspect-square'>
+                  <div className='aspect-square rounded-full w-1/2 bg-white'>
+                    <img src={item.img} alt={item.alt} />
+                  </div>
+                  <h1 className='text-lg text-white open-sans-300 text-center open-sans-600 mt-5'>{item.title}</h1>
+                </div>
+              ))
+            }
 
+          </div>
+        </section>
+        
+        <section className='w-full flex items-center justify-center flex-row mt-36'>
+          <div className='w-4/5 mx-3 border border-purple-300 rounded-3xl shadow-2xl shadow-purple-300 bg-white flex flex-col sm:flex-row items-center justify-between p-10 gap-20 sm:gap-0'>
+            <div className='text-center text-3xl text-purple-500 pt-5 sm:pt-0 sm:pl-5'>
+              <h1 className='open-sans-600'>200</h1>
+              <h3 className='open-sans-300'>Students</h3>
+            </div>
+            <div className='hidden sm:block h-28 w-[0.1rem] bg-purple-500'/>
+            <div className='text-center text-3xl text-purple-500'>
+              <h1 className='open-sans-600'>20</h1>
+              <h3 className='open-sans-300'>Mentors</h3>
+            </div>
+            <div className='hidden sm:block h-28 w-[0.1rem] bg-purple-500'/>
+            <div className='text-center text-3xl text-purple-500 pb-5 sm:pb-0 sm:pr-5'>
+              <h1 className='open-sans-600'>5</h1>
+              <h3 className='open-sans-300'>Tutors</h3>
+            </div>
+          </div>
+          
+        </section>
+        <section className='w-full mt-32 flex flex-col items-center justify-center'>
+          <div className='p-4 sm:w-1/2 text-center text-3xl open-sans-600 text-blue-accent-400'>
+            <h1>Let’s enhance your academic journey with the guidance of our top mentor</h1>
+          </div>
+          <div className='w-1/2 mt-10 flex items-center justify-center'>
+            <button
+              className='w-full sm:w-1/3 p-3 bg-blue-accent-300 text-white rounded-full open-sans-600 text-lg mt-5 shadow-blue-accent-300 shadow-md drop-shadow-xl hover:shadow-lg transition duration-300 ease-linear'
+              onClick={() => navigate('/register')}
+            >
+              sign up now
+            </button>
+          </div>
+        </section>
+        
+        <div className='p-5'/>
       </motion.div>  
       
       <Footer />  

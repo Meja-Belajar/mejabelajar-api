@@ -8,8 +8,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { registerService } from '@src/apis/services/userService'
 import '@assets/global.css';
 import Logo from '@src/components/Logo'
-import { RegisterUserSchema } from '@src/models/zod/account_zod'
-import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/account_request'
+import { RegisterUserSchema } from '@src/models/zod/user_zod'
+import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/user_request'
 
 const FormReducer = (state: RegisterUserRequest, action: any) => {
   return {
@@ -48,7 +48,7 @@ const Register = () => {
 
       if(registerResponse.code === 200){
         console.log(registerResponse);
-        navigate('/')
+        navigate('/login')
       } else {
         setWarn(registerResponse.message);
       }

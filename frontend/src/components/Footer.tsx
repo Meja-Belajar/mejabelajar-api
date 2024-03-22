@@ -6,7 +6,7 @@ import Facebook from '@assets/images/social/facebook.svg';
 const Footer: React.FC = () => {
   return (
     <>
-      <footer className='pb-10 p-2 pt-8 bg-gradient-to-t from-blue-accent-300 via-purple-400 to-purple-500 '>
+      <footer className='pb-10 p-2 pt-8 bg-gradient-to-t from-blue-accent-300 via-purple-400 to-purple-500'>
         <div className='p-6 sm:p-8 flex flex-col gap-10 sm:gap-0 sm:flex-row flex-wrap items-start justify-between drop-shadow-md shadow-md m-2 sm:m-10 bg-white-accent-1 rounded-xl text-black mb-10 sm:mb-5'>
           <div className='flex flex-start flex-col'>
             <h1 className='mb-2 open-sans-600'>Company</h1>

@@ -11,8 +11,8 @@ import { loginService } from '@src/apis/services/userService';
 import { UserContext } from '@contexts/UserContext';
 import Logo from '@src/components/Logo';
 import '@assets/global.css';
-import { LoginUserSchema } from '@src/models/zod/account_zod';
-import { LoginUserErrorValidation, LoginUserRequest } from '@src/models/requests/account_request';
+import { LoginUserSchema } from '@src/models/zod/user_zod';
+import { LoginUserErrorValidation, LoginUserRequest } from '@src/models/requests/user_request';
 
 const FormReducer = (state: LoginUserRequest, action: any) => {
   return {  
@@ -22,7 +22,7 @@ const FormReducer = (state: LoginUserRequest, action: any) => {
 };
 
 const Login = () => {
-  const { setLogin } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const [formData, setFormData] = useReducer(FormReducer, {} as LoginUserRequest);
   const [formDataError, setFormDataError] = useState<LoginUserErrorValidation>({} as LoginUserErrorValidation);
@@ -53,8 +53,8 @@ const Login = () => {
         setLoading(true);
         const loginResponse = await loginService({ email: formData.email, password: formData.password });
 
-        if(loginResponse && setLogin && loginResponse.code === 200){
-          setLogin(loginResponse);
+        if(loginResponse && setUser && loginResponse.code === 200){
+          setUser(loginResponse);
           navigate('/');
         } else {
           throw new Error(loginResponse.message);

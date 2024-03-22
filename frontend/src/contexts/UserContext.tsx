@@ -1,67 +1,36 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { getLive, getMentor, loginService } from '@src/apis/services/userService';
-import { Live, User, UserLogin } from '@src/models/database/userModel';
 import { useLocation } from 'react-router-dom';
 import Loading from '@src/components/Loading';
+import { LoginUserResponse, UserAsMentorResponse } from '@src/models/responses/user_response';
+import { isLoggedService } from '@src/apis/services/userService';
 
 interface Children {
   children: React.ReactNode
 }
 
-interface UserContent {
-  user?: User;
-  live?: Live;
-  login?: UserLogin;
-  setLogin?: (c: UserLogin) => void;
+interface UserContextProps {
+  user?: LoginUserResponse;
+  setUser?: (c: LoginUserResponse) => void;
 }
 
-const UserContext = createContext<UserContent>({})
+const UserContext = createContext<UserContextProps>({})
 
 const UserProvider = ( { children } : Children ) => {
-  // loading state
-  const [isLoad, setLoad] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
-  const [user, setUser] = useState<User>();
-  const [live, setlive] = useState<Live>();
-
-  const [login, setLogin] = useState<UserLogin>();
+  const [user, setUser] = useState<LoginUserResponse>();
+  const [mentor, setMentor] = useState<UserAsMentorResponse>();
 
   useEffect(() => {
-    setLoad(true);
+    const isLogged = isLoggedService();
 
-    const fetchData = async () => {
-      try {
-        // const userData = await getMentor();
-        // setUser(userData);
+    if(isLogged) {
+      setUser(isLogged);
 
-        // const liveData = await getLive();
-        // setlive(liveData);
+      // getUserAsMentorService();
+    }
 
-        // console.log(userData); 
-        // console.log(liveData); 
-
-        setLoad(false); 
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    
-    // const checkLogin = async () => {
-    //   setLoad(true);
-    //   // const data = await loginService(null, null);
-      
-    //   setLogin(data);
-      
-    //   setLoad(false);
-    // }
-    
-    // checkLogin();
-  }, []);
+  }, [user]);
 
   const location = useLocation();
 
@@ -70,11 +39,10 @@ const UserProvider = ( { children } : Children ) => {
       window.scrollTo(0, 0);
     }
   }, [location]);
-  
 
-  if(isLoad) return ( <Loading /> )
+  if(isLoading) return ( <Loading /> )
   else return (
-    <UserContext.Provider value={{ user, live, login, setLogin}}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}  
     </UserContext.Provider>
   )
