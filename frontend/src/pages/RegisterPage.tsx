@@ -6,19 +6,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { registerService } from '@src/apis/services/userService'
-import logo from '@public/vite.svg'
-import { UserContext } from '@contexts/UserContext'
 import '@assets/global.css';
 import Logo from '@src/components/Logo'
-import { RegisterUserSchema } from '@src/models/zod/user'
+import { RegisterUserSchema } from '@src/models/zod/account_zod'
+import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/account_request'
 
-interface FormFormat {
-  name: string,
-  email: string,
-  password: string,
-}
-
-const FormReducer = (state: FormFormat, action: any) => {
+const FormReducer = (state: RegisterUserRequest, action: any) => {
   return {
     ...state,
     [action.name]: action.value
@@ -29,31 +22,39 @@ const Register = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   
-  const [formData, setFormData] = useReducer(FormReducer, {} as FormFormat);
-  const [formDataError, setFormDataError] = useState<FormFormat>({} as FormFormat);
+  const [formData, setFormData] = useReducer(FormReducer, {} as RegisterUserRequest);
+  const [formDataError, setFormDataError] = useState<RegisterUserErrorValidation>({} as RegisterUserErrorValidation);
 
   const [warn, setWarn] = useState<string>('');
-
+  
   const navigate = useNavigate();
   
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const handleRegister = async ({ name, email, password}: FormFormat) => {
+    const handleRegister = async () => {
       setLoading(true);
 
-      const data = await registerService({ name, email, password });
+      const registerResponse = await registerService({ 
+        user_name: formData.user_name, 
+        email: formData.email, 
+        password: formData.password,
+        phone_number: formData.phone_number, 
+        bod: formData.bod, 
+        confirm_password: formData.confirm_password, 
+        created_by: formData.created_by
+      });
       setLoading(false);
 
-      if(data.status === 200){
+      if(registerResponse.code === 200){
+        console.log(registerResponse);
         navigate('/')
       } else {
-        setWarn('Invalid email or password');
+        setWarn(registerResponse.message);
       }
     }
 
     const parsedUser = RegisterUserSchema.safeParse(formData);
-    console.log(parsedUser);
 
     if (!parsedUser.success) {
       const error = parsedUser.error;
@@ -64,23 +65,23 @@ const Register = () => {
           [issue.path[0]]: issue.message,
         };
       }
-      setFormDataError(newErrors as FormFormat);
+      setFormDataError(newErrors as RegisterUserErrorValidation);
     } else {
-      handleRegister(formData);
-      setFormDataError({} as FormFormat);
+      console.log("page ", formData);
+      handleRegister();
+      setFormDataError({} as RegisterUserErrorValidation);
     }
-
   }
 
   return (  
     <>
       <motion.div
-        className='w-full h-[100vh] flex items-center flex-col'
+        className='w-full flex items-center flex-col'
         initial={ initial }
         animate={ animate }
         exit={ exit }
       > 
-        <nav className='w-full h-16 mt-2 flex justify-between items-center p-3 sm:p-7'>
+        <nav className='w-full h-16 mt-2 flex justify-between items-center p-3 sm:p-7 mb-10'>
           <Logo />
           <div>
             <Link className='lato-regular p-3 transition ease-soft-spring hover:text-blue-accent-300' to='/'>HOME</Link>
@@ -100,25 +101,52 @@ const Register = () => {
             </div>
             <div className='m-3 mt-8'>
               <Input 
-                name='email'
-                type='email' 
-                variant='bordered'
-                className='lato-regular' 
-                label='Email'
-                value={formData.email}
-                onChange={setFormData}
-              />
-              {formDataError.email && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.email}</p>}
-              <Input 
                 name='name'
                 type='name' 
                 variant='bordered'
                 className='mt-3 lato-regular' 
                 label='Name'
-                value={formData.name}
-                onChange={setFormData}
+                value={formData.user_name}
+                onChange={(e) => {
+                  setFormData({type: 'change', value: e.target.value, name: 'user_name'})
+                  setFormData({type: 'change', value: e.target.value, name: 'created_by'})
+                }}
               />
               {formDataError.name && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.name}</p>}
+              <Input 
+                name='email'
+                type='email' 
+                variant='bordered'
+                className='lato-regular mt-3' 
+                label='Email'
+                value={formData.email}
+                onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'email'})}
+              />
+              {formDataError.email && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.email}</p>}
+              <Input 
+                name='phone_number'
+                type='text' 
+                variant='bordered'
+                className='lato-regular mt-3' 
+                label='Phone Number'
+                value={formData.phone_number}
+                onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'phone_number'})}
+              />
+              {formDataError.phone_number && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.phone_number}</p>}
+              <Input 
+                name='bod'
+                type='date' 
+                variant='bordered'
+                className='lato-regular mt-3' 
+                classNames={{
+                  label: "-mt-4 text-xs"
+                }}
+                label='Date of Birth'
+                value={formData.bod}
+                key='outside'
+                onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'bod'})}
+              />
+              {formDataError.bod && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.bod}</p>} 
               <Input 
                 name='password'
                 type={ isVisible ? "text" : "password"}
@@ -126,7 +154,7 @@ const Register = () => {
                 label='Password'
                 className='mt-3 lato-regular'
                 value={formData.password}
-                onChange={setFormData}
+                onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'password'})}
                 endContent={
                   <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
                     { 
@@ -140,6 +168,27 @@ const Register = () => {
                 }      
               />
               {formDataError.password && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.password}</p>}
+              <Input 
+                name='confirmpassword'
+                type={ isVisible ? "text" : "password"}
+                variant='bordered' 
+                label='Confirm Password'
+                className='mt-3 lato-regular'
+                value={formData.confirm_password}
+                onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'confirm_password'})}
+                endContent={
+                  <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                    { 
+                      isVisible ? (
+                        <FontAwesomeIcon icon={faEyeSlash} className='opacity-60'/>  
+                      ) : (
+                        <FontAwesomeIcon icon={faEye} className='opacity-60'/>  
+                      ) 
+                    }
+                  </button>
+                }      
+              />
+              {formDataError.confirm_password && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.confirm_password}</p>}
 
             </div>
 
