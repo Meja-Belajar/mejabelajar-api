@@ -9,7 +9,7 @@ import Profile from '@src/pages/ProfilePage';
 
 import '@assets/global.css';
 import { UserProvider } from '@contexts/UserContext'
-import { AuthRedirector } from '@src/helpers/AuthRedirector';
+import { AuthRedirector } from '@components/AuthRedirector';
 import { QueryProvider } from '@contexts/SearchQueryContext'
 import Search from '@pages/Search/SearchPage'
 import SearchDefault from '@pages/Search/SearchDefault'

@@ -1,70 +1,73 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Modal, ModalBody, ModalContent } from '@nextui-org/react';
 import { motion }from 'framer-motion';
 
 import { exit, animate, initial } from '@assets/PageTransition';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginService } from '@src/apis/services/userService';
 
 import { UserContext } from '@contexts/UserContext';
 import Logo from '@src/components/Logo';
 import '@assets/global.css';
-import { validateLogin } from '@src/helpers/utils/formValidation';
-import { LoginUserSchema } from '@src/models/zod/user';
+import { LoginUserSchema } from '@src/models/zod/account_zod';
+import { LoginUserErrorValidation, LoginUserRequest } from '@src/models/requests/account_request';
 
-interface FormFormat {
-  email: string,
-  password: string,
-}
-
-const FormReducer = (state: FormFormat, action: any) => {
-  return {
+const FormReducer = (state: LoginUserRequest, action: any) => {
+  return {  
     ...state,
     [action.name]: action.value
   };
 };
 
 const Login = () => {
-  const { login, setLogin } = useContext(UserContext);
+  const { setLogin } = useContext(UserContext);
 
-  const [formData, setFormData] = useReducer(FormReducer, {} as FormFormat);
-  const [formDataError, setFormDataError] = useState<FormFormat>({} as FormFormat);
+  const [formData, setFormData] = useReducer(FormReducer, {} as LoginUserRequest);
+  const [formDataError, setFormDataError] = useState<LoginUserErrorValidation>({} as LoginUserErrorValidation);
 
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [isFail, setFail] = useState<boolean>(false);
+
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(isFail){
+      setTimeout(() => {
+        setFail(false);
+      }, 1500);
+    }
+  }, [isFail]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const handleLogin = async ({email, password}: FormFormat) => {
+    const handleLogin = async () => {
 
       setLoading(true);
       try {
       
         setLoading(true);
-        const data = await loginService(email, password);
+        const loginResponse = await loginService({ email: formData.email, password: formData.password });
 
-        if(data && setLogin && data.status === 200){
-          setLogin(data);
+        if(loginResponse && setLogin && loginResponse.code === 200){
+          setLogin(loginResponse);
           navigate('/');
         } else {
-          console.error('Error:', data);
-          setLoading(false);
+          throw new Error(loginResponse.message);
         }
         
         setLoading(false);
       } catch (error) {
-        console.error(error);
+        setFail(true);
         setLoading(false);
       }
     }
 
     const parsedUser = LoginUserSchema.safeParse(formData);
-    console.log(parsedUser);
 
     if (!parsedUser.success) {
       const error = parsedUser.error;
@@ -75,10 +78,10 @@ const Login = () => {
           [issue.path[0]]: issue.message,
         };
       }
-      setFormDataError(newErrors as FormFormat);
+      setFormDataError(newErrors as LoginUserErrorValidation);
     } else {
-      handleLogin(formData);
-      setFormDataError({} as FormFormat);
+      handleLogin();
+      setFormDataError({} as LoginUserErrorValidation);
     }
 
   }
@@ -150,6 +153,16 @@ const Login = () => {
             <Button type='submit' color='default' variant='solid' className='bg-blue-accent-300 text-black w-full' isLoading={loading}>Login</Button>
           </div>
         </form>
+
+
+        <Modal isOpen={isFail} backdrop={"blur"}  hideCloseButton className='py-14'>
+          <ModalContent>
+            <ModalBody className='flex items-center text-red-500'>
+              <FontAwesomeIcon icon={faCircleExclamation} className='text-5xl'/>
+              <h2>Failed to Login</h2>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
       </motion.div>
     </>

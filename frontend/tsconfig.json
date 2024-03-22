@@ -34,6 +34,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "services", "src/models/database/userModel.tsx"],
+  "include": ["src", "services", "src/models/database/userModel.tsx", "../__test__/userService.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

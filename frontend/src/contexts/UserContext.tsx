@@ -51,16 +51,16 @@ const UserProvider = ( { children } : Children ) => {
 
   useEffect(() => {
     
-    const checkLogin = async () => {
-      setLoad(true);
-      const data = await loginService(null, null);
+    // const checkLogin = async () => {
+    //   setLoad(true);
+    //   // const data = await loginService(null, null);
       
-      setLogin(data);
+    //   setLogin(data);
       
-      setLoad(false);
-    }
+    //   setLoad(false);
+    // }
     
-    checkLogin();
+    // checkLogin();
   }, []);
 
   const location = useLocation();
