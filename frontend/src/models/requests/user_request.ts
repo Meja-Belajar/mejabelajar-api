@@ -2,7 +2,7 @@ export interface RegisterUserRequest {
   user_name: string;
   email: string;
   phone_number: string;
-  bod: string;
+  bod: Date;
   password: string;
   confirm_password: string;
   created_by: string;

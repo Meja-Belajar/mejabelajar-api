@@ -1,4 +1,6 @@
-export interface RegisterUserResponse {
+import { BaseResponse } from "./base_response";
+
+export interface RegisterUserResponse extends BaseResponse {
   data: {
     id: string;
     username: string;
@@ -15,9 +17,7 @@ export interface RegisterUserResponse {
   };
 }
 
-export interface LoginUserResponse {
-  code: number;
-  message: string;
+export interface LoginUserResponse extends BaseResponse {
   data: {
     id: string;
     username: string;
@@ -32,8 +32,4 @@ export interface LoginUserResponse {
     created_at: string; 
     updated_at: string;
   };
-}
-
-export interface UserAsMentorResponse {
-
 }

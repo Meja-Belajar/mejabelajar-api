@@ -31,6 +31,7 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [isFail, setFail] = useState<boolean>(false);
+  const [warn, setWarn] = useState<string>('');
 
   const navigate = useNavigate();
   
@@ -46,23 +47,24 @@ const Login = () => {
     e.preventDefault();
 
     const handleLogin = async () => {
-
-      setLoading(true);
       try {
-      
         setLoading(true);
-        const loginResponse = await loginService({ email: formData.email, password: formData.password });
 
-        if(loginResponse && setUser && loginResponse.code === 200){
-          setUser(loginResponse);
-          navigate('/');
-        } else {
-          throw new Error(loginResponse.message);
-        }
+        const loginResponse = await loginService({ email: formData.email, password: formData.password });
         
-        setLoading(false);
+        if(loginResponse.code !== 200){
+          throw new Error(loginResponse.message);
+        } 
+        
+        setUser!(loginResponse);
+        navigate('/');
+        
       } catch (error) {
-        setFail(true);
+        if(error instanceof Error){
+          setFail(true);
+          setWarn(error.toString());
+        }
+      } finally {
         setLoading(false);
       }
     }
@@ -159,7 +161,7 @@ const Login = () => {
           <ModalContent>
             <ModalBody className='flex items-center text-red-500'>
               <FontAwesomeIcon icon={faCircleExclamation} className='text-5xl'/>
-              <h2>Failed to Login</h2>
+              {warn && <h2 className='text-sm mt-6'>{warn}</h2>}
             </ModalBody>
           </ModalContent>
         </Modal>

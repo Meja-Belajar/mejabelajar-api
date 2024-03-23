@@ -10,6 +10,9 @@ import '@assets/global.css';
 import Logo from '@src/components/Logo'
 import { RegisterUserSchema } from '@src/models/zod/user_zod'
 import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/user_request'
+import { RegisterUserResponse } from '@src/models/responses/user_response'
+import { maxDateUtil } from '@src/utils/dateUtil'
+import { register } from 'module'
 
 const FormReducer = (state: RegisterUserRequest, action: any) => {
   return {
@@ -33,30 +36,39 @@ const Register = () => {
     e.preventDefault();
 
     const handleRegister = async () => {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const registerResponse = await registerService({ 
-        user_name: formData.user_name, 
-        email: formData.email, 
-        password: formData.password,
-        phone_number: formData.phone_number, 
-        bod: formData.bod, 
-        confirm_password: formData.confirm_password, 
-        created_by: formData.created_by
-      });
-      setLoading(false);
+        const registerResponse = await registerService({ 
+          user_name: formData.user_name, 
+          email: formData.email, 
+          password: formData.password,
+          phone_number: formData.phone_number, 
+          bod: formData.bod, 
+          confirm_password: formData.confirm_password, 
+          created_by: formData.created_by
+        });
 
-      if(registerResponse.code === 200){
-        console.log(registerResponse);
-        navigate('/login')
-      } else {
-        setWarn(registerResponse.message);
+        if(registerResponse.code !== 200) {
+          throw new Error(registerResponse.message);
+        } 
+        
+        navigate('/login');
+
+      } catch (error) {
+        if(error instanceof Error) {
+          window.scrollTo(0, 0);
+          setWarn(error.toString());
+        }
+      } finally {
+        setLoading(false);
       }
     }
 
     const parsedUser = RegisterUserSchema.safeParse(formData);
 
     if (!parsedUser.success) {
+      setLoading(true);
       const error = parsedUser.error;
       let newErrors = {};
       for (const issue of error.issues) {
@@ -66,17 +78,16 @@ const Register = () => {
         };
       }
       setFormDataError(newErrors as RegisterUserErrorValidation);
+      setLoading(false);
     } else {
-      console.log("page ", formData);
       handleRegister();
-      setFormDataError({} as RegisterUserErrorValidation);
     }
   }
 
   return (  
     <>
       <motion.div
-        className='w-full flex items-center flex-col'
+        className='w-full flex items-center flex-col pb-36'
         initial={ initial }
         animate={ animate }
         exit={ exit }
@@ -142,9 +153,10 @@ const Register = () => {
                   label: "-mt-4 text-xs"
                 }}
                 label='Date of Birth'
-                value={formData.bod}
+                value={formData?.bod?.toString()} 
                 key='outside'
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'bod'})}
+                max={maxDateUtil()}
               />
               {formDataError.bod && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.bod}</p>} 
               <Input 
