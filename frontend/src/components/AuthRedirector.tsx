@@ -14,12 +14,12 @@ const AuthRedirector = ({ mustLogin }: LoginAuthProps) => {
     // console.log(login?.status, mustLogin);
 
     // if user already login and want to access authentication page then navigate to home
-    if(user?.code === 200 && mustLogin === false) {
+    if(user && mustLogin === false) {
       navigate('/');
     } 
   
     // if user not login and want to access protected page then navigate to login
-    if(user?.code !== 200 && mustLogin === true) {
+    if(user && mustLogin === true) {
       navigate('/login');
     }
   }, []);

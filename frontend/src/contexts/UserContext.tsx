@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import Loading from '@src/components/Loading';
-import { LoginUserResponse, UserAsMentorResponse } from '@src/models/responses/user_response';
+import { LoginUserResponse } from '@src/models/responses/user_response';
 import { isLoggedService } from '@src/apis/services/userService';
 
 interface Children {
@@ -19,10 +19,11 @@ const UserProvider = ( { children } : Children ) => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   const [user, setUser] = useState<LoginUserResponse>();
-  const [mentor, setMentor] = useState<UserAsMentorResponse>();
+  // const [mentor, setMentor] = useState<UserAsMentorResponse>();
 
   useEffect(() => {
     const isLogged = isLoggedService();
+    console.log(isLogged);
 
     if(isLogged) {
       setUser(isLogged);
@@ -30,7 +31,7 @@ const UserProvider = ( { children } : Children ) => {
       // getUserAsMentorService();
     }
 
-  }, [user]);
+  }, []);
 
   const location = useLocation();
 
