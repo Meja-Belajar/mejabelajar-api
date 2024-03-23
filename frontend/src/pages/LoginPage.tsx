@@ -52,10 +52,7 @@ const Login = () => {
 
         const loginResponse = await loginService({ email: formData.email, password: formData.password });
         
-        if(loginResponse.code !== 200){
-          throw new Error(loginResponse.message);
-        } 
-        
+        // error validation already handled by loginResponse
         setUser!(loginResponse);
         navigate('/');
         
@@ -82,8 +79,8 @@ const Login = () => {
       }
       setFormDataError(newErrors as LoginUserErrorValidation);
     } else {
-      handleLogin();
       setFormDataError({} as LoginUserErrorValidation);
+      handleLogin();
     }
 
   }

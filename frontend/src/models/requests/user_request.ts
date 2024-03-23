@@ -9,7 +9,7 @@ export interface RegisterUserRequest {
 }
 
 export interface RegisterUserErrorValidation{
-  name: string;
+  user_name: string;
   email: string;
   phone_number: string;
   bod: string;
