@@ -8,8 +8,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { registerService } from '@src/apis/services/userService'
 import '@assets/global.css';
 import Logo from '@src/components/Logo'
-import { RegisterUserSchema } from '@src/models/zod/account_zod'
-import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/account_request'
+
+import { RegisterUserSchema } from '@src/models/zod/user_zod'
+import { RegisterUserErrorValidation, RegisterUserRequest } from '@src/models/requests/user_request'
+import { RegisterUserResponse } from '@src/models/responses/user_response'
+import { maxDateUtil } from '@src/utils/dateUtil'
+import { register } from 'module'
+
 
 const FormReducer = (state: RegisterUserRequest, action: any) => {
   return {
@@ -29,10 +34,9 @@ const Register = () => {
   
   const navigate = useNavigate();
   
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
 
-    const handleRegister = async () => {
+  const handleRegister = async () => {
+    try {
       setLoading(true);
 
       const registerResponse = await registerService({ 
@@ -44,19 +48,29 @@ const Register = () => {
         confirm_password: formData.confirm_password, 
         created_by: formData.created_by
       });
-      setLoading(false);
 
-      if(registerResponse.code === 200){
-        console.log(registerResponse);
-        navigate('/')
-      } else {
-        setWarn(registerResponse.message);
+
+      // error validation already handled by registerService
+      navigate('/login');
+
+    } catch (error) {
+      if(error instanceof Error) {
+        window.scrollTo(0, 0);
+        setWarn(error.toString());
+
       }
+    } finally {
+      setLoading(false);
     }
+  }
 
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    console.log("in");
     const parsedUser = RegisterUserSchema.safeParse(formData);
 
     if (!parsedUser.success) {
+      setLoading(true);
       const error = parsedUser.error;
       let newErrors = {};
       for (const issue of error.issues) {
@@ -65,18 +79,23 @@ const Register = () => {
           [issue.path[0]]: issue.message,
         };
       }
+
+      console.log(newErrors);
       setFormDataError(newErrors as RegisterUserErrorValidation);
+      setLoading(false);
     } else {
-      console.log("page ", formData);
-      handleRegister();
       setFormDataError({} as RegisterUserErrorValidation);
+      handleRegister();
+
     }
   }
 
   return (  
     <>
       <motion.div
-        className='w-full flex items-center flex-col'
+
+        className='w-full flex items-center flex-col pb-36'
+
         initial={ initial }
         animate={ animate }
         exit={ exit }
@@ -107,12 +126,14 @@ const Register = () => {
                 className='mt-3 lato-regular' 
                 label='Name'
                 value={formData.user_name}
+
+                errorMessage={formDataError.user_name && formDataError.user_name}
+
                 onChange={(e) => {
                   setFormData({type: 'change', value: e.target.value, name: 'user_name'})
                   setFormData({type: 'change', value: e.target.value, name: 'created_by'})
                 }}
               />
-              {formDataError.name && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.name}</p>}
               <Input 
                 name='email'
                 type='email' 
@@ -120,9 +141,11 @@ const Register = () => {
                 className='lato-regular mt-3' 
                 label='Email'
                 value={formData.email}
+
+                errorMessage={formDataError.email && formDataError.email}
+
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'email'})}
               />
-              {formDataError.email && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.email}</p>}
               <Input 
                 name='phone_number'
                 type='text' 
@@ -130,9 +153,10 @@ const Register = () => {
                 className='lato-regular mt-3' 
                 label='Phone Number'
                 value={formData.phone_number}
+
+                errorMessage={formDataError.phone_number && formDataError.phone_number}
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'phone_number'})}
               />
-              {formDataError.phone_number && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.phone_number}</p>}
               <Input 
                 name='bod'
                 type='date' 
@@ -142,11 +166,12 @@ const Register = () => {
                   label: "-mt-4 text-xs"
                 }}
                 label='Date of Birth'
-                value={formData.bod}
+                value={formData?.bod?.toString()} 
                 key='outside'
+                errorMessage={formDataError.bod && formDataError.bod}
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'bod'})}
+                max={maxDateUtil()}
               />
-              {formDataError.bod && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.bod}</p>} 
               <Input 
                 name='password'
                 type={ isVisible ? "text" : "password"}
@@ -154,6 +179,7 @@ const Register = () => {
                 label='Password'
                 className='mt-3 lato-regular'
                 value={formData.password}
+                errorMessage={formDataError.password && formDataError.password}
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'password'})}
                 endContent={
                   <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
@@ -167,7 +193,6 @@ const Register = () => {
                   </button>
                 }      
               />
-              {formDataError.password && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.password}</p>}
               <Input 
                 name='confirmpassword'
                 type={ isVisible ? "text" : "password"}
@@ -175,6 +200,7 @@ const Register = () => {
                 label='Confirm Password'
                 className='mt-3 lato-regular'
                 value={formData.confirm_password}
+                errorMessage={formDataError.confirm_password && formDataError.confirm_password}
                 onChange={(e) => setFormData({type: 'change', value: e.target.value, name: 'confirm_password'})}
                 endContent={
                   <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
@@ -188,7 +214,6 @@ const Register = () => {
                   </button>
                 }      
               />
-              {formDataError.confirm_password && <p className='text-sm p-1 mt-1 lato-regular text-red-600'>{formDataError.confirm_password}</p>}
 
             </div>
 

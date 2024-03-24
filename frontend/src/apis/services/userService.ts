@@ -1,20 +1,17 @@
 import { userServiceApi } from "@src/configs/envConfig";
-import { LoginUserRequest, RegisterUserRequest } from "@src/models/requests/account_request";
+import { LoginUserRequest, RegisterUserRequest } from "@src/models/requests/user_request";
+import Cookies from 'universal-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { decode } from "punycode";
+import { LoginUserResponse, RegisterUserResponse } from "@src/models/responses/user_response";
 
-export const registerService = async ({ 
-    user_name, 
-    email, 
-    password, 
-    phone_number, 
-    bod, 
-    confirm_password, 
-    created_by
-  } : RegisterUserRequest) => {
+const cookies = new Cookies();
 
+export const registerService = async (requestData: RegisterUserRequest): Promise<RegisterUserResponse> => {
+  const { user_name, email, password, phone_number, bod, confirm_password, created_by } = requestData;
   const apiurl = userServiceApi.register;
-  
+
   try {
-  
     const response = await fetch(apiurl, {
       method: 'POST',
       headers: {
@@ -33,20 +30,21 @@ export const registerService = async ({
     });
     
     const registerResponse = await response.json();
+    
+    if(registerResponse.code !== 200) {
+      throw new Error(registerResponse.message);
+    }
+    
+    return registerResponse as RegisterUserResponse;
+  } catch (error) {
 
-    if(registerResponse && registerResponse.code !== 200) {
-      throw new Error(registerResponse.message)
-    } 
-
-    return registerResponse;
-  } catch(error) {
-
-    console.error('Error', error);
-    throw error;  
+    console.error('Error registering user:', error);
+    throw new Error('Failed to register user. You may have entered used data. Please try again.');
   }
 }
 
-export const loginService = async ({ email, password } : LoginUserRequest) => {
+export const loginService = async ( requestData : LoginUserRequest): Promise<LoginUserResponse> => {
+  const { email, password } = requestData;
   const apiurl = userServiceApi.login;
 
   try {
@@ -60,50 +58,46 @@ export const loginService = async ({ email, password } : LoginUserRequest) => {
 
     const loginResponse = await response.json();
     
-    if(loginResponse && loginResponse.code !== 200) {
+    if(loginResponse.code !== 200) {
       throw new Error(loginResponse.message);
     }
-    return loginResponse;
-    
-  } catch (error) {
-    console.error('Error', error);
-    throw error;  
-  }
 
+    // Handle specific error cases here if necessary
+    
+    // Decode and manage JWT token
+    // const decoded = jwtDecode(loginResponse.data.token);
+    // cookies.set('token', loginResponse.data.token, { 
+    //   expires: new Date(decoded.exp! * 1000) 
+    // });
+
+    // Store user data in local storage
+    localStorage.setItem('user', JSON.stringify(loginResponse.data));
+
+    return loginResponse as LoginUserResponse;
+  } catch (error) {
+
+    console.error('Error logging in:', error);
+    throw new Error('Failed to login. Please try again.');
+  }
 }
 
-// Fetch live data
-export const getLive = async () => {
-  try {
-    const response = await fetch('../../data/live.json');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-};
 
-// Fetch mentor data
-export const getMentor = async () => {
-  try {
-    const response = await fetch('../../data/mentor.json');
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-};
+export const isLoggedService = () => {
+  // return cookies.get('token');
 
-// Fetch user data
-export const getUser = async () => {
-  try {
-    const response = await fetch('../../data/user.json');
-    const data = response.json();
-    return data;
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
+  if(localStorage.getItem('user')) {
+    return JSON.parse(localStorage.getItem('user')!);
+  } else {
+    return null;
   }
-};
+}
+
+export const logoutService = () => {
+  // cookies.remove('token');
+  // return null;
+
+  if(localStorage.getItem('user')){
+    localStorage.removeItem('user');
+  }
+  return null;
+}
