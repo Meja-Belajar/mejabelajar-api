@@ -1,0 +1,22 @@
+{
+  "live": [
+    {
+      "userid": "MENTOR0002",
+      "thumbnail": "https://dummyimage.com/300x200",
+      "startTime": "2022-09-02T15:30:00Z",
+      "expired": false,
+      "name": "Live Stream 2",
+      "title": "Web Development Basics",
+      "total_watchers": 50
+    },
+    {
+      "userid": "MENTOR0003",
+      "thumbnail": "https://dummyimage.com/300x200",
+      "startTime": "2022-09-03T09:45:00Z",
+      "expired": true,
+      "name": "Live Stream 3",
+      "title": "Advanced JavaScript",
+      "total_watchers": 200
+    }
+  ]
+}

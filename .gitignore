@@ -24,7 +24,6 @@ dist-ssr
 *.sw?
 
 # frontend
-data
 .env
 __assets__
 __test__

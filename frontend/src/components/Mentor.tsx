@@ -1,6 +1,5 @@
 import { Card, CardBody, CardHeader, Image, Skeleton } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { getMentor } from "@src/apis/services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faRightLong } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +14,11 @@ const Mentor = () => {
     setLoading(true);
 
     const fetchData = async () => {
-      const data = await getMentor();
+      // const data = await getMentor();
       
-      setMentorList(data.mentors);
-      console.log(data);
-      setLoading(false);
+      // setMentorList(data.mentors);
+      // console.log(data);
+      // setLoading(false);
     }
     
     fetchData();

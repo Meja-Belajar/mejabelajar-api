@@ -11,6 +11,6 @@ This repository is collectively owned by all contributors and serves as a univer
 ## Tech and Stack
 Description of the technologies and stack utilized in this project:
 - **Frontend**: React, TypeScript, Next.UI, TailwindCSS, Vite
-- **Backend**: Go
+- **Backend**: Golang, GORM, PostgreSQL
 
 All code documentation is available in both *frontend* and *backend* directories under `/docs`.

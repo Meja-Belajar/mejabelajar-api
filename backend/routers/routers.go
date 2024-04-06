@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/meja_belajar/configs"
+	"github.com/meja_belajar/middlewares"
 	"github.com/meja_belajar/controllers/services"
 )
 
@@ -12,12 +12,12 @@ func ConfigureRouter() *gin.Engine {
 	//@adding middleware
 	router := gin.New()
 	//server dapat memberikan izin kepada klien dari domain yang berbeda untuk mengakses sumber daya
-	router.Use(configs.CORSMiddleware())
+	router.Use(middlewares.CORSMiddleware())
 	//mencatat detail permintaan HTTP
 	router.Use(gin.Logger())
 	//menangani panic yang terjadi selama penanganan permintaan
 	router.Use(gin.Recovery())
-
+	//router.Use(middlewares.RequiredAuth())
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Code": 404, "Message": "Page Not Found"})
 	})

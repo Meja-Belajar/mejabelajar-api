@@ -67,7 +67,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 
 }
 
-func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}) {
+func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}, string) {
 	db := configs.GetDB()
 	var user database.Users
 	err := db.Where("email = ?", LoginUserRequestDTO.Email).First(&user).Error
@@ -76,7 +76,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 			Code:    404,
 			Message: "Not Found: User not found",
 		}
-		return 404, output
+		return 404, output, ""
 	}
 
 	res, err := utils.ComparePassword(LoginUserRequestDTO.Password, user.Password)
@@ -85,14 +85,22 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 			Code:    500,
 			Message: "compare password fail Internal Server Error: " + err.Error(),
 		}
-		return 500, output
+		return 500, output, ""
 	}
 	if !res {
 		output := outputs.UnauthorizedOutput{
 			Code:    401,
 			Message: "Unauthorized: Wrong Password",
 		}
-		return 401, output
+		return 401, output, ""
+	}
+	tokenString, err := utils.CreateJWTToken(user.ID)
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Fail to create token: " + err.Error(),
+		}
+		return 500, output, ""
 	}
 	output := outputs.LoginUserOutput{
 		BaseOutput: outputs.BaseOutput{
@@ -112,5 +120,5 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 			UpdatedAt:      user.UpdatedAt,
 		},
 	}
-	return 200, output
+	return 200, output, tokenString
 }

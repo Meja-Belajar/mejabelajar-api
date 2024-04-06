@@ -34,11 +34,12 @@ func LoginUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, outputs)
 		return
 	}
-	code, output := helpers.LoginUser(LoginUserRequestDTO)
+	code, output, tokenString := helpers.LoginUser(LoginUserRequestDTO)
+	c.SetCookie("Authorization", tokenString, 3600*24, "", "", true, true)
 	c.JSON(code, output)
 }
 
 func UserService(router *gin.RouterGroup) {
 	router.POST("/user/register", RegisterUser)
-	router.POST("/user/login", LoginUser)
+	router.POST("/user/login",LoginUser)
 }
