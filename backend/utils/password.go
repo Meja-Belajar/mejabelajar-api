@@ -11,18 +11,13 @@ import (
 )
 
 const (
-	time      = 1
-	memory    = 64 * 1024
-	threads   = 4
-	keyLength = 32
+	hashTime      = 1
+	memory        = 64 * 1024
+	threads       = 4
+	keyLength     = 32
 )
 
 func HashPassword(password string) (string, error) {
-	// Parameters for hashing
-	time := 1
-	memory := 64 * 1024
-	threads := 4
-	keyLength := 32
 
 	// Generate salt
 	salt := make([]byte, 16) // 16 byte salt
@@ -31,7 +26,7 @@ func HashPassword(password string) (string, error) {
 	}
 
 	// Hash password
-	hash := argon2.IDKey([]byte(password), salt, uint32(time), uint32(memory), uint8(threads), uint32(keyLength))
+	hash := argon2.IDKey([]byte(password), salt, uint32(hashTime), uint32(memory), uint8(threads), uint32(keyLength))
 
 	// Encode salt and hash to base64
 	encodedSalt := base64.RawStdEncoding.EncodeToString(salt)
@@ -61,7 +56,7 @@ func ComparePassword(password, hash string) (bool, error) {
 	}
 
 	// Hash password with retrieved salt
-	newHash := argon2.IDKey([]byte(password), salt, uint32(time), uint32(memory), uint8(threads), uint32(keyLength))
+	newHash := argon2.IDKey([]byte(password), salt, uint32(hashTime), uint32(memory), uint8(threads), uint32(keyLength))
 
 	// Compare the newly hashed password with the original hash
 	return subtle.ConstantTimeCompare(decodedHash, newHash) == 1, nil
