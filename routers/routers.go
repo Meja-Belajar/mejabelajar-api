@@ -17,7 +17,9 @@ func ConfigureRouter() *gin.Engine {
 	router.Use(gin.Logger())
 	//menangani panic yang terjadi selama penanganan permintaan
 	router.Use(gin.Recovery())
+
 	//router.Use(middlewares.RequiredAuth())
+
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Code": 404, "Message": "Page Not Found"})
 	})

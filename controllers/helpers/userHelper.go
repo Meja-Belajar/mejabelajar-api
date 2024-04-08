@@ -33,8 +33,10 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		Email:          AddUserRequestDTO.Email,
 		Password:       hashedPassword,
 		Phone:          AddUserRequestDTO.PhoneNumber,
-		IsActive:       AddUserRequestDTO.IsActive,
-		CreatedBy:      AddUserRequestDTO.CreatedBy,
+		Log: database.Log{
+			IsActive:  AddUserRequestDTO.IsActive, // Example value for IsActive
+			CreatedBy: AddUserRequestDTO.CreatedBy, // Example value for CreatedBy
+		},
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
 	err = db.Create(&user).Error
@@ -55,12 +57,14 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			UserName:       user.Username,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
-			IsActive:       user.IsActive,
-			CreatedBy:      user.CreatedBy,
 			ProfilePicture: user.ProfilePicture,
-			UpdatedBy:      user.UpdatedBy,
-			CreatedAt:      user.CreatedAt,
-			UpdatedAt:      user.UpdatedAt,
+			Log: responses.LogResponseDTO{
+				IsActive:  user.Log.IsActive,
+				CreatedBy: user.Log.CreatedBy,
+				UpdatedBy: user.Log.UpdatedBy,
+				CreatedAt: user.Log.CreatedAt,
+				UpdatedAt: user.Log.UpdatedAt,
+			},
 		},
 	}
 	return 200, output
@@ -112,12 +116,14 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 			UserName:       user.Username,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
-			IsActive:       user.IsActive,
-			CreatedBy:      user.CreatedBy,
 			ProfilePicture: user.ProfilePicture,
-			UpdatedBy:      user.UpdatedBy,
-			CreatedAt:      user.CreatedAt,
-			UpdatedAt:      user.UpdatedAt,
+			Log: responses.LogResponseDTO{
+				IsActive:  user.Log.IsActive,
+				CreatedBy: user.Log.CreatedBy,
+				UpdatedBy: user.Log.UpdatedBy,
+				CreatedAt: user.Log.CreatedAt,
+				UpdatedAt: user.Log.UpdatedAt,
+			},
 		},
 	}
 	return 200, output, tokenString
