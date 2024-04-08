@@ -14,9 +14,5 @@ type UserResponseDTO struct {
 	Description    string    `json:"description"`
 	ProfilePicture string    `json:"profile_picture"`
 	BOD            time.Time `json:"bod"`
-	IsActive       bool      `json:"is_active"`
-	CreatedBy      string    `json:"created_by"`
-	UpdatedBy      string    `json:"updated_by"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
+	Log            LogResponseDTO
 }
