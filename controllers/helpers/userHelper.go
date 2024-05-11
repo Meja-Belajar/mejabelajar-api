@@ -42,12 +42,12 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		return 409, output
 	}
 	user = database.Users{
-		Username:       AddUserRequestDTO.UserName,
-		Email:          AddUserRequestDTO.Email,
-		Password:       hashedPassword,
-		Phone:          AddUserRequestDTO.PhoneNumber,
+		Username: AddUserRequestDTO.UserName,
+		Email:    AddUserRequestDTO.Email,
+		Password: hashedPassword,
+		Phone:    AddUserRequestDTO.PhoneNumber,
 		Log: database.Log{
-			IsActive:  AddUserRequestDTO.IsActive, // Example value for IsActive
+			IsActive:  AddUserRequestDTO.IsActive,  // Example value for IsActive
 			CreatedBy: AddUserRequestDTO.CreatedBy, // Example value for CreatedBy
 		},
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
@@ -82,7 +82,6 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		},
 	}
 	return 201, output
-
 }
 
 func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}, string) {

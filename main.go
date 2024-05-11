@@ -13,9 +13,8 @@ func init() {
 
 // @BasePath /api/v1
 func main() {
-	configs.DB.AutoMigrate(&database.Users{}, &database.Mentors{}, &database.Courses{}, &database.MentorCourses{},&database.MentorReviews{}, &database.Invoices{}, &database.Bookings{} )
-	//r := gin.Default()
-	//services.UserService(r)
+	// configs.DB.AutoMigrate(&database.Users{}, &database.Mentors{}, &database.Courses{}, &database.MentorCourses{}, &database.MentorReviews{}, &database.Invoices{}, &database.Bookings{})
+	configs.DB.AutoMigrate(&database.Users{}, &database.Mentors{}, &database.Courses{}, &database.Invoices{}, &database.Bookings{})
 	r := routers.ConfigureRouter()
 	r.Run(":3000")
 }

@@ -42,5 +42,5 @@ func LoginUser(c *gin.Context) {
 
 func UserService(router *gin.RouterGroup) {
 	router.POST("/user/register", RegisterUser)
-	router.POST("/user/login",LoginUser)
+	router.POST("/user/login", LoginUser)
 }

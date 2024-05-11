@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/meja_belajar/middlewares"
 	"github.com/meja_belajar/controllers/services"
+	"github.com/meja_belajar/middlewares"
 )
 
 func ConfigureRouter() *gin.Engine {
@@ -29,5 +29,6 @@ func ConfigureRouter() *gin.Engine {
 
 	base := router.Group("api/v1")
 	services.UserService(base)
+	services.BookingService(base)
 	return router
 }
