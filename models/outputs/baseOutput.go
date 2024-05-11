@@ -28,3 +28,8 @@ type InternalServerErrorOutput struct {
 	Code    int    `json:"code" default:"500"`
 	Message string `json:"message" default:"Internal Server Error: {message}"`
 }
+
+type ConflictOutput struct {
+	Code    int    `json:"code" default:"409"`
+	Message string `json:"message" default:"Conflict: {message}"`
+}

@@ -7,9 +7,11 @@ import (
 	"github.com/meja_belajar/models/requests"
 	"github.com/meja_belajar/models/responses"
 	"github.com/meja_belajar/utils"
+	"gorm.io/gorm"
 )
 
 func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, interface{}) {
+	//validasi password dan confirm password sama
 	if AddUserRequestDTO.Password != AddUserRequestDTO.ConfirmPassword {
 		output := outputs.BadRequestOutput{
 			Code:    400,
@@ -18,6 +20,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		return 400, output
 	}
 
+	//validasi hash password
 	hashedPassword, err := utils.HashPassword(AddUserRequestDTO.Password)
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
@@ -28,7 +31,17 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 	}
 
 	db := configs.GetDB()
-	user := database.Users{
+	var user database.Users
+	err = db.Where("email = ?", AddUserRequestDTO.Email).First(&user).Error
+	//validasi email sudah ada atau belum
+	if err == nil {
+		output := outputs.ConflictOutput{
+			Code:    409,
+			Message: "Conflict: Email already exists",
+		}
+		return 409, output
+	}
+	user = database.Users{
 		Username:       AddUserRequestDTO.UserName,
 		Email:          AddUserRequestDTO.Email,
 		Password:       hashedPassword,
@@ -40,6 +53,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
 	err = db.Create(&user).Error
+	//validasi error saat insert data
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -49,7 +63,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 	}
 	output := outputs.RegisterUserOutput{
 		BaseOutput: outputs.BaseOutput{
-			Code:    200,
+			Code:    201,
 			Message: "Success: Account has been created",
 		},
 		Data: responses.UserResponseDTO{
@@ -67,7 +81,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			},
 		},
 	}
-	return 200, output
+	return 201, output
 
 }
 
@@ -75,7 +89,8 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	db := configs.GetDB()
 	var user database.Users
 	err := db.Where("email = ?", LoginUserRequestDTO.Email).First(&user).Error
-	if err != nil {
+	//validasi user tidak ditemukan
+	if err == gorm.ErrRecordNotFound {
 		output := outputs.NotFoundOutput{
 			Code:    404,
 			Message: "Not Found: User not found",
@@ -84,13 +99,15 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	}
 
 	res, err := utils.ComparePassword(LoginUserRequestDTO.Password, user.Password)
+	//validasi error saat proses compare password
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
-			Message: "compare password fail Internal Server Error: " + err.Error(),
+			Message: "Internal Server Error: " + err.Error(),
 		}
 		return 500, output, ""
 	}
+	//validasi password salah
 	if !res {
 		output := outputs.UnauthorizedOutput{
 			Code:    401,
@@ -99,6 +116,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		return 401, output, ""
 	}
 	tokenString, err := utils.CreateJWTToken(user.ID)
+	//validasi error saat create token
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -109,7 +127,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	output := outputs.LoginUserOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
-			Message: "Success: Account has been created",
+			Message: "Success: Login Successful",
 		},
 		Data: responses.UserResponseDTO{
 			ID:             user.ID,
