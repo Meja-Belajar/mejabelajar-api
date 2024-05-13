@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"time"
+
 	"github.com/meja_belajar/configs"
 	"github.com/meja_belajar/models/database"
 	"github.com/meja_belajar/models/outputs"
@@ -42,12 +44,22 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		return 409, output
 	}
 	// buat user baru
+	bod, err := time.Parse("2006-01-02T15:04:05Z", AddUserRequestDTO.BOD)
+	if err != nil {
+		output := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: Invalid date format",
+		}
+		return 400, output
+	}
+
 	user := database.Users{
 		Username:       AddUserRequestDTO.UserName,
 		University:     AddUserRequestDTO.University,
 		Email:          AddUserRequestDTO.Email,
-		Password:       hashedPassword,
 		Phone:          AddUserRequestDTO.PhoneNumber,
+		BOD:            bod,
+		Password:       hashedPassword,
 		IsActive:       true,
 		CreatedBy:      AddUserRequestDTO.UserName,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
@@ -74,13 +86,11 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			University:     user.University,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
+			Description:    user.Description,
+			ProfilePicture: user.ProfilePicture,
+			BOD:            user.BOD,
 			IsActive:       user.IsActive,
 			IsMentor:       false,
-			CreatedBy:      user.CreatedBy,
-			ProfilePicture: user.ProfilePicture,
-			UpdatedBy:      user.UpdatedBy,
-			CreatedAt:      user.CreatedAt,
-			UpdatedAt:      user.UpdatedAt,
 		},
 	}
 	return 201, output
@@ -154,13 +164,11 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 			University:     user.University,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
+			Description:    user.Description,
+			ProfilePicture: user.ProfilePicture,
+			BOD:            user.BOD,
 			IsActive:       user.IsActive,
 			IsMentor:       IsMentor,
-			CreatedBy:      user.CreatedBy,
-			ProfilePicture: user.ProfilePicture,
-			UpdatedBy:      user.UpdatedBy,
-			CreatedAt:      user.CreatedAt,
-			UpdatedAt:      user.UpdatedAt,
 		},
 	}
 	return 200, output, tokenString
@@ -206,13 +214,11 @@ func GetUserByID(userID string) (int, interface{}) {
 			University:     user.University,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
+			Description:    user.Description,
+			ProfilePicture: user.ProfilePicture,
+			BOD:            user.BOD,
 			IsActive:       user.IsActive,
 			IsMentor:       IsMentor,
-			CreatedBy:      user.CreatedBy,
-			ProfilePicture: user.ProfilePicture,
-			UpdatedBy:      user.UpdatedBy,
-			CreatedAt:      user.CreatedAt,
-			UpdatedAt:      user.UpdatedAt,
 		},
 	}
 	return 200, output

@@ -17,8 +17,4 @@ type UserResponseDTO struct {
 	BOD            time.Time `json:"bod"`
 	IsActive       bool      `json:"is_active"`
 	IsMentor       bool      `json:"is_mentor"`
-	CreatedBy      string    `json:"created_by"`
-	UpdatedBy      string    `json:"updated_by"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
 }
