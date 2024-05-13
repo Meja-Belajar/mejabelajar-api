@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"context"
+	"os"
 	"time"
 
 	"github.com/meja_belajar/configs"
@@ -31,17 +33,33 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		}
 		return 500, output
 	}
-
-	db := configs.GetDB()
+	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
+	if err != nil {
+		timeout = 3 * time.Second
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	db := configs.GetDB().WithContext(ctx)
 	var oldUser database.Users
-	err = db.Where("email = ?", AddUserRequestDTO.Email).First(&oldUser).Error
+	err = db.
+		Where("email = ?", AddUserRequestDTO.Email).
+		First(&oldUser).
+		Error
 	//validasi email belum terdaftar
 	if err == nil {
-		output := outputs.Conflict{
+		output := outputs.ConflictOutput{
 			Code:    409,
 			Message: "Conflict: email already used",
 		}
 		return 409, output
+	}
+	//validasi timeout
+	if ctx.Err() == context.DeadlineExceeded {
+		output := outputs.RequestTimeoutOutput{
+			Code:    408,
+			Message: "Request Timeout",
+		}
+		return 408, output
 	}
 	// buat user baru
 	bod, err := time.Parse("2006-01-02T15:04:05Z", AddUserRequestDTO.BOD)
