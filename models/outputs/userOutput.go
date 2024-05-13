@@ -11,3 +11,8 @@ type LoginUserOutput struct {
 	BaseOutput
 	Data responses.UserResponseDTO `json:"data"`
 }
+
+type GetUserByIDOutput struct{
+	BaseOutput
+	Data responses.UserResponseDTO `json:"data"`
+}

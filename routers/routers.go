@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/meja_belajar/middlewares"
 	"github.com/meja_belajar/controllers/services"
+	"github.com/meja_belajar/middlewares"
 )
 
 func ConfigureRouter() *gin.Engine {
@@ -17,15 +17,20 @@ func ConfigureRouter() *gin.Engine {
 	router.Use(gin.Logger())
 	//menangani panic yang terjadi selama penanganan permintaan
 	router.Use(gin.Recovery())
-	//router.Use(middlewares.RequiredAuth())
+
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Code": 404, "Message": "Page Not Found"})
 	})
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Code": 200, "Message": "Welcome to Meja Belajar API"})
 	})
+	//group yang perlu auth
+	auth := router.Group("api/v1/auth")
+	services.UserServiceAuth(auth)
+	auth.Use(middlewares.RequiredAuth())
 
+	//group basic
 	base := router.Group("api/v1")
-	services.UserService(base)
+	services.UserServiceBasic(base)
 	return router
 }

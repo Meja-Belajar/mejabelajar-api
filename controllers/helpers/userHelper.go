@@ -7,9 +7,11 @@ import (
 	"github.com/meja_belajar/models/requests"
 	"github.com/meja_belajar/models/responses"
 	"github.com/meja_belajar/utils"
+	"gorm.io/gorm"
 )
 
 func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, interface{}) {
+	//validasi password dan confirm password
 	if AddUserRequestDTO.Password != AddUserRequestDTO.ConfirmPassword {
 		output := outputs.BadRequestOutput{
 			Code:    400,
@@ -19,6 +21,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 	}
 
 	hashedPassword, err := utils.HashPassword(AddUserRequestDTO.Password)
+	//validasi hash password
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -28,16 +31,30 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 	}
 
 	db := configs.GetDB()
+	var oldUser database.Users
+	err = db.Where("email = ?", AddUserRequestDTO.Email).First(&oldUser).Error
+	//validasi email belum terdaftar
+	if err == nil {
+		output := outputs.Conflict{
+			Code:    409,
+			Message: "Conflict: email already used",
+		}
+		return 409, output
+	}
+	// buat user baru
 	user := database.Users{
 		Username:       AddUserRequestDTO.UserName,
+		University:     AddUserRequestDTO.University,
 		Email:          AddUserRequestDTO.Email,
 		Password:       hashedPassword,
 		Phone:          AddUserRequestDTO.PhoneNumber,
-		IsActive:       AddUserRequestDTO.IsActive,
-		CreatedBy:      AddUserRequestDTO.CreatedBy,
+		IsActive:       true,
+		CreatedBy:      AddUserRequestDTO.UserName,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
+
 	err = db.Create(&user).Error
+	//validasi create user
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -45,17 +62,20 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		}
 		return 500, output
 	}
+
 	output := outputs.RegisterUserOutput{
 		BaseOutput: outputs.BaseOutput{
-			Code:    200,
+			Code:    201,
 			Message: "Success: Account has been created",
 		},
 		Data: responses.UserResponseDTO{
 			ID:             user.ID,
 			UserName:       user.Username,
+			University:     user.University,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
 			IsActive:       user.IsActive,
+			IsMentor:       false,
 			CreatedBy:      user.CreatedBy,
 			ProfilePicture: user.ProfilePicture,
 			UpdatedBy:      user.UpdatedBy,
@@ -63,14 +83,16 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			UpdatedAt:      user.UpdatedAt,
 		},
 	}
-	return 200, output
+	return 201, output
 
 }
 
 func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}, string) {
 	db := configs.GetDB()
 	var user database.Users
+	//cari user menggunakan email
 	err := db.Where("email = ?", LoginUserRequestDTO.Email).First(&user).Error
+	//validasi jika user tidak ditemukan
 	if err != nil {
 		output := outputs.NotFoundOutput{
 			Code:    404,
@@ -80,6 +102,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	}
 
 	res, err := utils.ComparePassword(LoginUserRequestDTO.Password, user.Password)
+	//validasi jika ada error saat compare password
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -87,6 +110,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		}
 		return 500, output, ""
 	}
+	//validasi jika password salah
 	if !res {
 		output := outputs.UnauthorizedOutput{
 			Code:    401,
@@ -95,6 +119,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		return 401, output, ""
 	}
 	tokenString, err := utils.CreateJWTToken(user.ID)
+	//validasi jika error saat create token
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
@@ -102,6 +127,22 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		}
 		return 500, output, ""
 	}
+
+	var mentor database.Mentors
+	var IsMentor bool = false
+	err = db.Where("mentors.user_id = (?)", user.ID).Find(&mentor).Error
+	//validasi jika error saat mencari mentor
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Fail to find mentor: " + err.Error(),
+		}
+		return 500, output, ""
+	}
+	if mentor.UserID == user.ID {
+		IsMentor = true
+	}
+
 	output := outputs.LoginUserOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
@@ -110,9 +151,11 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		Data: responses.UserResponseDTO{
 			ID:             user.ID,
 			UserName:       user.Username,
+			University:     user.University,
 			Email:          user.Email,
 			PhoneNumber:    user.Phone,
 			IsActive:       user.IsActive,
+			IsMentor:       IsMentor,
 			CreatedBy:      user.CreatedBy,
 			ProfilePicture: user.ProfilePicture,
 			UpdatedBy:      user.UpdatedBy,
@@ -121,4 +164,56 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		},
 	}
 	return 200, output, tokenString
+}
+
+func GetUserByID(userID string) (int, interface{}) {
+	db := configs.GetDB()
+	var user database.Users
+	//cari user menggunakan id
+	err := db.Table("users").Where("users.id = (?)", userID).First(&user).Error
+	//validasi jika user tidak ditemukan
+	if err == gorm.ErrRecordNotFound {
+		output := outputs.NotFoundOutput{
+			Code:    404,
+			Message: "Not Found: User not found",
+		}
+		return 404, output
+	}
+
+	var mentor database.Mentors
+	var IsMentor bool = false
+	err = db.Where("mentors.user_id = (?)", user.ID).Find(&mentor).Error
+	//validasi jika error saat mencari mentor
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Fail to find mentor: " + err.Error(),
+		}
+		return 500, output
+	}
+	if mentor.UserID == user.ID {
+		IsMentor = true
+	}
+
+	output := outputs.GetUserByIDOutput{
+		BaseOutput: outputs.BaseOutput{
+			Code:    200,
+			Message: "Success: Account found",
+		},
+		Data: responses.UserResponseDTO{
+			ID:             user.ID,
+			UserName:       user.Username,
+			University:     user.University,
+			Email:          user.Email,
+			PhoneNumber:    user.Phone,
+			IsActive:       user.IsActive,
+			IsMentor:       IsMentor,
+			CreatedBy:      user.CreatedBy,
+			ProfilePicture: user.ProfilePicture,
+			UpdatedBy:      user.UpdatedBy,
+			CreatedAt:      user.CreatedAt,
+			UpdatedAt:      user.UpdatedAt,
+		},
+	}
+	return 200, output
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/meja_belajar/controllers/helpers"
 	"github.com/meja_belajar/models/outputs"
 	"github.com/meja_belajar/models/requests"
@@ -39,7 +40,25 @@ func LoginUser(c *gin.Context) {
 	c.JSON(code, output)
 }
 
-func UserService(router *gin.RouterGroup) {
+func GetUserByID(c *gin.Context) {
+	userID := c.Param("id")
+	//validasi userID merupakan uuid
+	if _, err := uuid.Parse(userID); err != nil {
+		output := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: " + err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, output)
+		return
+	}
+	code, output := helpers.GetUserByID(userID)
+	c.JSON(code, output)
+}
+
+func UserServiceBasic(router *gin.RouterGroup) {
 	router.POST("/user/register", RegisterUser)
-	router.POST("/user/login",LoginUser)
+	router.POST("/user/login", LoginUser)
+}
+func UserServiceAuth(router *gin.RouterGroup) {
+	router.GET("/user/:id", GetUserByID)
 }
