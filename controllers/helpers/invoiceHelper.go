@@ -1,1 +1,5 @@
-package helpers	
+package helpers
+
+func CreateInvoice() {
+
+}

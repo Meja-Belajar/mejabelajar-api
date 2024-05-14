@@ -10,7 +10,6 @@ type Mentors struct {
 	Rating             float64   `gorm:"type:float;default:0"`
 	TotalTeachingHours int       `gorm:"type:int;default:0"`
 	TeachingFrequency  int       `gorm:"type:int;default:0"`
-	Log                Log       `gorm:"embedded"`
 
 	Courses       []Courses       `gorm:"many2many:mentor_courses;"`
 	MentorReviews []MentorReviews `gorm:"foreignKey:mentor_id;references:id"`

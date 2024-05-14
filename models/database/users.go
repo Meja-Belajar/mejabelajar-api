@@ -18,6 +18,7 @@ type Users struct {
 	BOD            time.Time `gorm:"type:date"`
 	Log            Log       `gorm:"embedded"`
 
-	Bookings []Bookings `gorm:"foreignKey:user_id;references:id"`
-	Mentor   Mentors    `gorm:"foreignKey:user_id;references:id"`
+	Bookings     []Bookings   `gorm:"foreignKey:user_id;references:id"`
+	Mentor       Mentors      `gorm:"foreignKey:user_id;references:id"`
+	Notification Notification `gorm:"foreignKey:user_id;references:id"`
 }

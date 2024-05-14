@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/meja_belajar/configs"
 	"github.com/meja_belajar/models/database"
 	"github.com/meja_belajar/models/outputs"
+	"github.com/meja_belajar/models/requests"
 	"github.com/meja_belajar/models/responses"
 	"gorm.io/gorm"
 )
@@ -125,11 +127,80 @@ func FindBookingByBookingID(bookingID string) (int, interface{}) {
 	output := outputs.BookingByBookIdOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
-			Message: "Success: booking has been retrieved",
+			Message: "Success: Booking with ID has been retrieved",
 		},
 		Data: booking,
 	}
 	return 200, output
+}
+
+func CreateBooking(bookingData requests.NewBookingRequestDTO) (int, interface{}) {
+	invoice := database.Invoices{
+		PaymentMethod: bookingData.Invoice.Payment_method,
+		PaymentName:   bookingData.Invoice.Payment_name,
+		PaymentStatus: bookingData.Invoice.Payment_status,
+		PaymentAmount: bookingData.Invoice.Payment_amount,
+		PaymentFee:    0.007 * bookingData.Invoice.Payment_amount,
+	}
+	invoice.PaymentTotal = invoice.PaymentAmount + invoice.PaymentFee
+
+	err := configs.DB.Create(&invoice).Error
+	if err != nil {
+		return 500, outputs.InternalServerErrorOutput{Message: "Internal Server Error"}
+	}
+
+	parsedDate, err := time.Parse("2006-01-02T15:04:05Z", bookingData.ScheduleTime)
+	if err != nil {
+		return 400, outputs.BadRequestOutput{Message: "Bad Request: Invalid date format"}
+	}
+
+	booking := database.Bookings{
+		InvoiceID: invoice.ID,
+		Location:  bookingData.ScheduledLocation,
+		Date:      parsedDate,
+	}
+
+	booking.UserID, err = uuid.Parse(bookingData.UserID)
+	if err != nil {
+		return 500, outputs.InternalServerErrorOutput{Message: "error parsing UserID"}
+	}
+
+	booking.MentorID, err = uuid.Parse(bookingData.MentorID)
+	if err != nil {
+		return 500, outputs.InternalServerErrorOutput{Message: "error parsing Mentor ID"}
+	}
+
+	booking.CourseID, err = uuid.Parse(bookingData.CourseID)
+	if err != nil {
+		return 500, outputs.InternalServerErrorOutput{Message: "error parsing Course ID"}
+	}
+
+	err = configs.DB.Create(&booking).Error
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Internal Server Error",
+		}
+		return 500, output
+	}
+
+	code, output := FindBookingByBookingID(booking.ID.String())
+	if code != 200 {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Internal Server Error",
+		}
+		return 500, output
+	}
+
+	baseOutput := output.(outputs.BookingByBookIdOutput).BaseOutput
+	baseOutput.Code = 201
+	baseOutput.Message = "Success: Booking Created"
+	output = outputs.BookingByBookIdOutput{
+		BaseOutput: baseOutput,
+		Data:       output.(outputs.BookingByBookIdOutput).Data,
+	}
+	return 201, output
 }
 
 func DeleteBookingByBookingId(bookID string) (int, interface{}) {
