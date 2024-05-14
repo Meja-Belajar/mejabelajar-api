@@ -16,5 +16,4 @@ type Mentors struct {
  	MentorReviews      []MentorReviews `gorm:"foreignKey:MentorID;references:ID"`
 	Bookings 		   []Bookings`gorm:"foreignKey:MentorID;references:ID"`
 	UserID             uuid.UUID  `gorm:"type:uuid"`
-
 }

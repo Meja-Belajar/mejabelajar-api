@@ -24,6 +24,17 @@ type NotFoundOutput struct {
 	Code    int    `json:"code" default:"404"`
 	Message string `json:"message" default:"Not Found: {message}"`
 }
+
+type ConflictOutput struct {
+	Code    int    `json:"code" default:"409"`
+	Message string `json:"message" default:"Conflict: {message}"`
+}
+
+type RequestTimeoutOutput struct {
+	Code    int    `json:"code" default:"408"`
+	Message string `json:"message" default:"Request Timeout: {message}"`
+}
+
 type InternalServerErrorOutput struct {
 	Code    int    `json:"code" default:"500"`
 	Message string `json:"message" default:"Internal Server Error: {message}"`
