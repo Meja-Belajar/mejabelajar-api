@@ -12,7 +12,7 @@ import (
 
 func RegisterUser(c *gin.Context) {
 	var RegisterUserRequestDTO requests.RegisterUserRequestDTO
-
+	//validas format input
 	if err := c.ShouldBindJSON(&RegisterUserRequestDTO); err != nil {
 		outputs := outputs.BadRequestOutput{
 			Code:    400,
@@ -27,6 +27,7 @@ func RegisterUser(c *gin.Context) {
 
 func LoginUser(c *gin.Context) {
 	var LoginUserRequestDTO requests.LoginUserRequestDTO
+	//validasi format input
 	if err := c.ShouldBindJSON(&LoginUserRequestDTO); err != nil {
 		outputs := outputs.BadRequestOutput{
 			Code:    400,
@@ -59,6 +60,7 @@ func UserServiceBasic(router *gin.RouterGroup) {
 	router.POST("/user/register", RegisterUser)
 	router.POST("/user/login", LoginUser)
 }
+
 func UserServiceAuth(router *gin.RouterGroup) {
 	router.GET("/user/:id", GetUserByID)
 }

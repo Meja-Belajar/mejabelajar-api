@@ -24,6 +24,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		return 400, output
 	}
 
+	//validasi hash password
 	hashedPassword, err := utils.HashPassword(AddUserRequestDTO.Password)
 	//validasi hash password
 	if err != nil {
@@ -127,7 +128,6 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		},
 	}
 	return 201, output
-
 }
 
 func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}, string) {
@@ -169,7 +169,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
 			Code:    500,
-			Message: "compare password fail Internal Server Error: " + err.Error(),
+			Message: "Internal Server Error: " + err.Error(),
 		}
 		return 500, output, ""
 	}
@@ -209,7 +209,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 	output := outputs.LoginUserOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
-			Message: "Success: Account has been created",
+			Message: "Success: Login Successful",
 		},
 		Data: responses.UserResponseDTO{
 			ID:             user.ID,

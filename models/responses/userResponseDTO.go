@@ -15,6 +15,7 @@ type UserResponseDTO struct {
 	Description    string    `json:"description"`
 	ProfilePicture string    `json:"profile_picture"`
 	BOD            time.Time `json:"bod"`
+  
 	IsActive       bool      `json:"is_active"`
 	IsMentor       bool      `json:"is_mentor"`
 }

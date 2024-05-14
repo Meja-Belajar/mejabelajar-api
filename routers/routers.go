@@ -18,6 +18,7 @@ func ConfigureRouter() *gin.Engine {
 	//menangani panic yang terjadi selama penanganan permintaan
 	router.Use(gin.Recovery())
 
+
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Code": 404, "Message": "Page Not Found"})
 	})
@@ -31,6 +32,8 @@ func ConfigureRouter() *gin.Engine {
 
 	//group basic
 	base := router.Group("api/v1")
+	services.BookingService(base)
 	services.UserServiceBasic(base)
+  
 	return router
 }

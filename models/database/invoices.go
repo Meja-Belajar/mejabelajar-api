@@ -12,7 +12,7 @@ type Invoices struct {
 	PaymentAmount float64   `gorm:"type:float;not null;default:0"`
 	PaymentFee    float64   `gorm:"type:float;not null;default:0"`
 	PaymentTotal  float64   `gorm:"type:float;not null;default:0"`
-	log      Log		`gorm:"embedded"`
 
-	Bookings Bookings `gorm:"foreignKey:InvoiceID;references:ID"`
+	// Relationship
+	Bookings Bookings `gorm:"foreignKey:invoice_id;references:id"`
 }

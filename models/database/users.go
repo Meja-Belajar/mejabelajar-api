@@ -16,8 +16,8 @@ type Users struct {
 	Description    string    `gorm:"type:text"`
 	ProfilePicture string    `gorm:"type:varchar(255)"`
 	BOD            time.Time `gorm:"type:date"`
-	Log      Log       	`gorm:"embedded"`
 
-	Bookings []Bookings `gorm:"foreignKey:UserID;references:ID"`
-	Mentor   Mentors    `gorm:"foreignKey:UserID;references:ID"`
+	Bookings     []Bookings   `gorm:"foreignKey:user_id;references:id"`
+	Mentor       Mentors      `gorm:"foreignKey:user_id;references:id"`
+	Notification Notification `gorm:"foreignKey:user_id;references:id"`
 }
