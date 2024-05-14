@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+
 //  CEK LAGI NOT NULLNYA
 
 type MentorCourses struct {
@@ -15,4 +16,5 @@ type MentorCourses struct {
 	CourseEndTime   time.Time `gorm:"not null"`
 	Rating          float64   `gorm:"type:float;not null;default:0"`
 	HourlyRate      float64   `gorm:"type:float;not null;default:0"`
+
 }

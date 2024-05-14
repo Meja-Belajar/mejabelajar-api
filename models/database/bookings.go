@@ -14,7 +14,6 @@ type Bookings struct {
 	CourseID  uuid.UUID `gorm:"type:uuid;not null"`
 	InvoiceID uuid.UUID `gorm:"type:uuid;not null"`
 
-	//	FK
 	Date     time.Time `gorm:"type:date;not null"`
 	Location string    `gorm:"type:varchar(255);not null"`
 }
