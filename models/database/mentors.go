@@ -1,8 +1,6 @@
 package database
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -12,11 +10,7 @@ type Mentors struct {
 	Rating             float64   `gorm:"type:float;default:0"`
 	TotalTeachingHours int       `gorm:"type:int;default:0"`
 	TeachingFrequency  int       `gorm:"type:int;default:0"`
-	IsActive	       bool      `gorm:"type:boolean;not null;default:true"`
-	CreatedBy          string    `gorm:"type:varchar(50);not null;default:'system'"`
-	UpdatedBy          string    `gorm:"type:varchar(50);not null;default:'system'"`
-	CreatedAt          time.Time `gorm:"autoCreateTime;not null;default:now()"`
-	UpdatedAt          time.Time `gorm:"autoUpdateTime;not null;default:now()"`
+	Log      Log       	`gorm:"embedded"`
 
 	Courses            []Courses  `gorm:"many2many:mentor_courses;"`
  	MentorReviews      []MentorReviews `gorm:"foreignKey:MentorID;references:ID"`

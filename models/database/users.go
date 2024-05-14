@@ -16,11 +16,7 @@ type Users struct {
 	Description    string    `gorm:"type:text"`
 	ProfilePicture string    `gorm:"type:varchar(255)"`
 	BOD            time.Time `gorm:"type:date"`
-	IsActive       bool      `gorm:"type:boolean;not null;default:true"`
-	CreatedBy      string    `gorm:"type:varchar(50);not null;default:'system'"`
-	UpdatedBy      string    `gorm:"type:varchar(50);not null;default:'system'"`
-	CreatedAt      time.Time `gorm:"autoCreateTime;not null;default:now()"`
-	UpdatedAt      time.Time `gorm:"autoUpdateTime;not null;default:now()"`
+	Log      Log       	`gorm:"embedded"`
 
 	Bookings []Bookings `gorm:"foreignKey:UserID;references:ID"`
 	Mentor   Mentors    `gorm:"foreignKey:UserID;references:ID"`
