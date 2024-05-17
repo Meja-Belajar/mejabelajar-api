@@ -86,7 +86,6 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		BOD:            bod,
 		Password:       hashedPassword,
 		IsActive:       true,
-		CreatedBy:      AddUserRequestDTO.UserName,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
 

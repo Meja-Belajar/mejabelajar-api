@@ -16,6 +16,7 @@ type Users struct {
 	Description    string    `gorm:"type:text"`
 	ProfilePicture string    `gorm:"type:varchar(255)"`
 	BOD            time.Time `gorm:"type:date"`
+	IsActive       bool      `gorm:"type:boolean;default:true"`
 
 	Bookings     []Bookings   `gorm:"foreignKey:user_id;references:id"`
 	Mentor       Mentors      `gorm:"foreignKey:user_id;references:id"`
