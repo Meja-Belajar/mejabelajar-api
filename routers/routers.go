@@ -34,6 +34,7 @@ func ConfigureRouter() *gin.Engine {
 	base := router.Group("api/v1")
 	services.BookingService(base)
 	services.UserServiceBasic(base)
+	services.MentorReviewService(base)
   
 	return router
 }
