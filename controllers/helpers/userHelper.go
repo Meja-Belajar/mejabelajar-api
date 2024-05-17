@@ -2,14 +2,13 @@ package helpers
 
 import (
 	"context"
-	"os"
 	"time"
 
-	"github.com/meja_belajar/configs"
 	"github.com/meja_belajar/models/database"
 	"github.com/meja_belajar/models/outputs"
 	"github.com/meja_belajar/models/requests"
 	"github.com/meja_belajar/models/responses"
+	"github.com/meja_belajar/repositories"
 	"github.com/meja_belajar/utils"
 	"gorm.io/gorm"
 )
@@ -34,25 +33,28 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		}
 		return 500, output
 	}
-	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
-	if err != nil {
-		output := outputs.InternalServerErrorOutput{
-			Code:    500,
-			Message: "Internal Server Error: " + err.Error(),
-		}
-		return 500, output
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-	db := configs.GetDB().WithContext(ctx)
-	var oldUser database.Users
-	err = db.
-		Where("email = ?", AddUserRequestDTO.Email).
-		First(&oldUser).
-		Error
+	// timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
+	// if err != nil {
+	// 	output := outputs.InternalServerErrorOutput{
+	// 		Code:    500,
+	// 		Message: "Internal Server Error: " + err.Error(),
+	// 	}
+	// 	return 500, output
+	// }
+	// ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	// defer cancel()
+	// db := configs.GetDB().WithContext(ctx)
+	// var oldUser database.Users
+	// err = db.
+	// 	Where("email = ?", AddUserRequestDTO.Email).
+	// 	First(&oldUser).
+	// 	Error
+
+	var user database.Users
+	user, err = repositories.FindUserByEmail(AddUserRequestDTO.Email)
 
 	//validasi timeout
-	if ctx.Err() == context.DeadlineExceeded {
+	if err == context.DeadlineExceeded {
 		output := outputs.RequestTimeoutOutput{
 			Code:    408,
 			Message: "Request Timeout",
@@ -68,7 +70,8 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		}
 		return 409, output
 	}
-	// buat user baru
+
+	// // buat user baru
 	bod, err := time.Parse("2006-01-02T15:04:05Z", AddUserRequestDTO.BOD)
 	if err != nil {
 		output := outputs.BadRequestOutput{
@@ -78,7 +81,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		return 400, output
 	}
 
-	user := database.Users{
+	user = database.Users{
 		Username:       AddUserRequestDTO.UserName,
 		University:     AddUserRequestDTO.University,
 		Email:          AddUserRequestDTO.Email,
@@ -88,8 +91,17 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		IsActive:       true,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
+	err = repositories.InsertUser(user)
 
-	err = db.Create(&user).Error
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		output := outputs.RequestTimeoutOutput{
+			Code:    408,
+			Message: "Request Timeout",
+		}
+		return 408, output
+	}
+
 	//validasi create user
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
@@ -97,15 +109,6 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 			Message: "Internal Server Error: " + err.Error(),
 		}
 		return 500, output
-	}
-
-	//validasi timeout
-	if ctx.Err() == context.DeadlineExceeded {
-		output := outputs.RequestTimeoutOutput{
-			Code:    408,
-			Message: "Request Timeout",
-		}
-		return 408, output
 	}
 
 	output := outputs.RegisterUserOutput{
@@ -130,32 +133,20 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 }
 
 func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface{}, string) {
-	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
-	if err != nil {
-		output := outputs.InternalServerErrorOutput{
-			Code:    500,
-			Message: "Internal Server Error: " + err.Error(),
-		}
-		return 500, output, ""
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-	db := configs.GetDB().WithContext(ctx)
 	var user database.Users
+	user, err := repositories.FindUserByEmail(LoginUserRequestDTO.Email)
 
-	//cari user menggunakan email
-	err = db.Where("email = ?", LoginUserRequestDTO.Email).First(&user).Error
 	//validasi timeout
-	if ctx.Err() == context.DeadlineExceeded {
+	if err == context.DeadlineExceeded {
 		output := outputs.RequestTimeoutOutput{
 			Code:    408,
 			Message: "Request Timeout",
 		}
 		return 408, output, ""
 	}
+
 	//validasi jika user tidak ditemukan
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
 		output := outputs.NotFoundOutput{
 			Code:    404,
 			Message: "Not Found: User not found",
@@ -172,6 +163,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		}
 		return 500, output, ""
 	}
+
 	//validasi jika password salah
 	if !res {
 		output := outputs.UnauthorizedOutput{
@@ -181,6 +173,7 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 		return 401, output, ""
 	}
 	tokenString, err := utils.CreateJWTToken(user.ID)
+
 	//validasi jika error saat create token
 	if err != nil {
 		output := outputs.InternalServerErrorOutput{
@@ -192,15 +185,26 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 
 	var mentor database.Mentors
 	var IsMentor bool = false
-	err = db.Where("mentors.user_id = (?)", user.ID).Find(&mentor).Error
-	//validasi jika error saat mencari mentor
-	if err != nil {
-		output := outputs.InternalServerErrorOutput{
-			Code:    500,
-			Message: "Fail to find mentor: " + err.Error(),
+	// err = db.Where("mentors.user_id = (?)", user.ID).Find(&mentor).Error
+
+	// //validasi jika error saat mencari mentor
+	// if err != nil {
+	// 	output := outputs.InternalServerErrorOutput{
+	// 		Code:    500,
+	// 		Message: "Fail to find mentor: " + err.Error(),
+	// 	}
+	// 	return 500, output, ""
+	// }
+	mentor, err = repositories.FindMentorByUserID(user.ID.String())
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		output := outputs.RequestTimeoutOutput{
+			Code:    408,
+			Message: "Request Timeout",
 		}
-		return 500, output, ""
+		return 408, output, ""
 	}
+
 	if mentor.UserID == user.ID {
 		IsMentor = true
 	}
@@ -227,25 +231,28 @@ func LoginUser(LoginUserRequestDTO requests.LoginUserRequestDTO) (int, interface
 }
 
 func GetUserByID(userID string) (int, interface{}) {
-	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
-	if err != nil {
-		output := outputs.InternalServerErrorOutput{
-			Code:    500,
-			Message: "Fail to find mentor: " + err.Error(),
-		}
-		return 500, output
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
+	// timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
+	// if err != nil {
+	// 	output := outputs.InternalServerErrorOutput{
+	// 		Code:    500,
+	// 		Message: "Fail to find mentor: " + err.Error(),
+	// 	}
+	// 	return 500, output
+	// }
+	// ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	// defer cancel()
 
-	db := configs.GetDB().WithContext(ctx)
+	// db := configs.GetDB().WithContext(ctx)
+	// var user database.Users
+
+	// //cari user menggunakan id
+	// err = db.Table("users").Where("users.id = (?)", userID).First(&user).Error
+
 	var user database.Users
-
-	//cari user menggunakan id
-	err = db.Table("users").Where("users.id = (?)", userID).First(&user).Error
+	user, err := repositories.FindUserByUserID(userID)
 
 	//validasi timeout
-	if ctx.Err() == context.DeadlineExceeded {
+	if err == context.DeadlineExceeded {
 		output := outputs.RequestTimeoutOutput{
 			Code:    408,
 			Message: "Request Timeout",
@@ -264,9 +271,10 @@ func GetUserByID(userID string) (int, interface{}) {
 
 	var mentor database.Mentors
 	var IsMentor bool = false
-	err = db.Where("mentors.user_id = (?)", user.ID).Find(&mentor).Error
+	mentor, err = repositories.FindMentorByUserID(user.ID.String())
+
 	//validasi timeout
-	if ctx.Err() == context.DeadlineExceeded {
+	if err == context.DeadlineExceeded {
 		output := outputs.RequestTimeoutOutput{
 			Code:    408,
 			Message: "Request Timeout",
@@ -274,14 +282,6 @@ func GetUserByID(userID string) (int, interface{}) {
 		return 408, output
 	}
 
-	//validasi jika error saat mencari mentor
-	if err != nil {
-		output := outputs.InternalServerErrorOutput{
-			Code:    500,
-			Message: "Fail to find mentor: " + err.Error(),
-		}
-		return 500, output
-	}
 	if mentor.UserID == user.ID {
 		IsMentor = true
 	}
