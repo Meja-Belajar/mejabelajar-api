@@ -30,7 +30,23 @@ func GetMentorByMentorID(c *gin.Context) {
 	c.JSON(code, output)
 }
 
+func GetMentorByUserID(c *gin.Context) {
+	userID := c.Param("id")
+	//validasi userID merupakan uuid
+	if _, err := uuid.Parse(userID); err != nil {
+		output := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: " + err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, output)
+		return
+	}
+	code, output := helpers.GetMentorByUserID(userID)
+	c.JSON(code, output)
+}
+
 func MentorServiceAuth(router *gin.RouterGroup) {
-	router.GET("/mentor/:id", GetMentorByMentorID)
-	router.GET("/mentor", GetAllMentor)
+	router.GET("/mentors/:id", GetMentorByMentorID)
+	router.GET("/mentors", GetAllMentor)
+	router.GET("/mentors/user/:id", GetMentorByUserID)
 }

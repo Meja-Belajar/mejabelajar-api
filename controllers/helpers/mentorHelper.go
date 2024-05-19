@@ -163,7 +163,85 @@ func GetMentorByMentorID(mentorID string) (int, interface{}) {
 			return utils.HandleTimeout(err)
 		}
 	}
+	if err != nil {
+		return utils.HandleInternalServerError(err)
+	}
+	output := outputs.GetMentorByIDOutput{
+		BaseOutput: outputs.BaseOutput{
+			Code:    200,
+			Message: "Success: Mentor found",
+		},
+		Data: responses.MentorResponseDTO{
+			MentorID:           mentor.ID.String(),
+			Username:           user.Username,
+			University:         user.University,
+			Email:              user.Email,
+			Phone:              user.Phone,
+			Description:        user.Description,
+			ProfilePicture:     user.ProfilePicture,
+			BOD:                user.BOD,
+			Revenue:            mentor.Revenue,
+			Rating:             mentor.Rating,
+			TotalTeachingHours: mentor.TotalTeachingHours,
+			TeachingFrequency:  mentor.TeachingFrequency,
+			Courses:            courseResponseDTO,
+			Reviews:            reviewResponseDTO,
+		},
+	}
+	return 200, output
+}
 
+func GetMentorByUserID(userID string) (int, interface{}) {
+	user, err := repositories.FindUserByUserID(userID)
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		return utils.HandleTimeout(err)
+	}
+	if err == gorm.ErrRecordNotFound {
+		return utils.HandleNotFound("User")
+	}
+
+	mentor, err := repositories.FindMentorByUserID(userID)
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		return utils.HandleTimeout(err)
+	}
+	if err == gorm.ErrRecordNotFound {
+		return utils.HandleNotFound("Mentor")
+	}
+
+	var reviewResponseDTO []responses.ReviewResponseDTO
+	reviewResponseDTO, err = repositories.FindReviewByMentorID(mentor.ID.String())
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		return utils.HandleTimeout(err)
+	}
+	var mentorCourses []database.MentorCourses
+	mentorCourses, err = repositories.FindMentorCourseByMentorID(mentor.ID.String())
+	//validasi timeout
+	if err == context.DeadlineExceeded {
+		return utils.HandleTimeout(err)
+	}
+	var courseResponseDTO []responses.CourseResponseDTO
+	for _, mentorCourse := range mentorCourses {
+		course, err := repositories.FindCourseByID(mentorCourse.CourseID.String())
+		courseResponseDTO = append(courseResponseDTO, responses.CourseResponseDTO{
+			CourseID:        course.ID.String(),
+			Name:            course.Name,
+			Detail:          course.Detail,
+			Rating:          mentorCourse.Rating,
+			HourlyRate:      mentorCourse.HourlyRate,
+			CourseStartTime: mentorCourse.CourseStartTime,
+			CourseEndTime:   mentorCourse.CourseEndTime,
+		})
+		//validasi timeout
+		if err == context.DeadlineExceeded {
+			return utils.HandleTimeout(err)
+		}
+	}
+	if err != nil {
+		return utils.HandleInternalServerError(err)
+	}
 	output := outputs.GetMentorByIDOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
