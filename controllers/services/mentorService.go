@@ -9,6 +9,11 @@ import (
 	"github.com/meja_belajar/models/outputs"
 )
 
+func GetAllMentor(c *gin.Context) {
+	code, output := helpers.GetAllMentor()
+	c.JSON(code, output)
+}
+
 func GetMentorByMentorID(c *gin.Context) {
 	mentorID := c.Param("id")
 	//validasi mentorID merupakan uuid
@@ -27,4 +32,5 @@ func GetMentorByMentorID(c *gin.Context) {
 
 func MentorServiceAuth(router *gin.RouterGroup) {
 	router.GET("/mentor/:id", GetMentorByMentorID)
+	router.GET("/mentor", GetAllMentor)
 }

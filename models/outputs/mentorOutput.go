@@ -6,3 +6,8 @@ type GetMentorByIDOutput struct {
 	BaseOutput
 	Data responses.MentorResponseDTO `json:"data"`
 }
+
+type GetAllMentorOutput struct {
+	BaseOutput
+	Data []responses.MentorResponseDTO `json:"data"`
+}
