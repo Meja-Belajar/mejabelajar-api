@@ -1,6 +1,6 @@
 package responses
 
 type ReviewResponseDTO struct {
-	ID          int     `json:"review_id"`
-	Description string  `json:"description"`
+	ID          string `json:"review_id"`
+	Description string `json:"description"`
 }

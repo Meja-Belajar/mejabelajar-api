@@ -2,7 +2,7 @@ package outputs
 
 import "github.com/meja_belajar/models/responses"
 
-type MentorOutput struct {
+type GetMentorByIDOutput struct {
 	BaseOutput
 	Data responses.MentorResponseDTO `json:"data"`
 }
