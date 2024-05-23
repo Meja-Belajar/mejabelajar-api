@@ -9,6 +9,25 @@ import (
 	"github.com/meja_belajar/models/database"
 )
 
+func InsertMentorCourse(mentorCourse database.MentorCourses) (database.MentorCourses, error){
+	timeout, err := time.ParseDuration((os.Getenv("TIMEOUT")))
+	if err != nil {
+		return mentorCourse, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	db := configs.GetDB().WithContext(ctx)
+	err = db.Create(&mentorCourse).Error
+	if err == context.DeadlineExceeded{
+		return mentorCourse, err;
+	}
+	if err != nil{
+		return mentorCourse, err
+	}
+	return mentorCourse, err
+}
+
 func FindMentorCourseByMentorID(mentorID string) ([]database.MentorCourses, error) {
 	var mentorCourses []database.MentorCourses
 	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
@@ -31,3 +50,4 @@ func FindMentorCourseByMentorID(mentorID string) ([]database.MentorCourses, erro
 	}
 	return mentorCourses, nil
 }
+

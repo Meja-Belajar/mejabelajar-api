@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"log"
 	"context"
 	"os"
 	"time"
@@ -58,6 +59,7 @@ func FindUserByEmail(email string) (database.Users, error) {
 }
 
 func FindUserByUserID(userID string) (database.Users, error) {
+	log.Print("FindUserByUserID")
 	var user database.Users
 	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
 	if err != nil {
