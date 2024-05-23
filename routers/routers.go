@@ -26,9 +26,9 @@ func ConfigureRouter() *gin.Engine {
 	})
 	//group yang perlu auth
 	auth := router.Group("api/v1/auth")
+	auth.Use(middlewares.RequiredAuth())
 	services.UserServiceAuth(auth)
 	services.MentorServiceAuth(auth)
-	auth.Use(middlewares.RequiredAuth())
 
 	//group basic
 	base := router.Group("api/v1")

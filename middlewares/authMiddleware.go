@@ -2,13 +2,14 @@ package middlewares
 
 import (
 	"net/http"
-	"github.com/meja_belajar/utils"
+
 	"github.com/gin-gonic/gin"
 	"github.com/meja_belajar/models/outputs"
+	"github.com/meja_belajar/utils"
 )
 
 func RequiredAuth() gin.HandlerFunc {
-	return func (c *gin.Context){
+	return func(c *gin.Context) {
 		//get the cookie
 		tokenString, err := c.Cookie("Authorization")
 		if err != nil {
