@@ -57,10 +57,10 @@ func GetUserByID(c *gin.Context) {
 }
 
 func UserServiceBasic(router *gin.RouterGroup) {
-	router.POST("/user/register", RegisterUser)
-	router.POST("/user/login", LoginUser)
+	router.POST("/users/register", RegisterUser)
+	router.POST("/users/login", LoginUser)
 }
 
 func UserServiceAuth(router *gin.RouterGroup) {
-	router.GET("/user/:id", GetUserByID)
+	router.GET("/users/:id", GetUserByID)
 }

@@ -10,8 +10,11 @@ type Mentors struct {
 	Rating             float64   `gorm:"type:float;default:0"`
 	TotalTeachingHours int       `gorm:"type:int;default:0"`
 	TeachingFrequency  int       `gorm:"type:int;default:0"`
+	IsActive 		   bool      `gorm:"type:boolean;default:false"`
 
-	Courses       []Courses       `gorm:"many2many:mentor_courses;"`
+  // Relationship
+	MentorCourses []MentorCourses `gorm:"foreignKey:mentor_id;references:id"`
+	// Courses       []Courses       `gorm:"many2many:mentor_courses;"`
 	MentorReviews []MentorReviews `gorm:"foreignKey:mentor_id;references:id"`
 	Bookings      []Bookings      `gorm:"foreignKey:mentor_id;references:id"`
 	UserID        uuid.UUID       `gorm:"type:uuid"`

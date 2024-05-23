@@ -17,6 +17,7 @@ type Courses struct {
 	UpdatedAt 	time.Time 	`gorm:"type:timestamp;not null;default:now()"`
 
 	// Relationship
-	Mentors []Mentors `gorm:"many2many:mentor_courses;"`
+	MentorCourses []MentorCourses `gorm:"foreignKey:course_id;references:id"`
+	// Mentors []Mentors `gorm:"many2many:mentor_courses;"`
 	Booking Bookings  `gorm:"foreignKey:course_id;references:id"`
 }

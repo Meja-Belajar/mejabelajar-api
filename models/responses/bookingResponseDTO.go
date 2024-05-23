@@ -8,11 +8,11 @@ import (
 
 type BookingResponseDTO struct {
 	ID     uuid.UUID   `json:"id"`
-	User   userBooking `json:"user"`
-	Mentor userBooking `json:"mentor"`
+	User   UserBooking `json:"user"`
+	Mentor UserBooking `json:"mentor"`
 	Course struct {
 		ID     uuid.UUID `json:"id"`
-		Name   string    `josn:"name"`
+		Name   string    `json:"name"`
 		Detail string    `json:"detail"`
 	} `json:"course"`
 	Invoice struct {
@@ -28,7 +28,35 @@ type BookingResponseDTO struct {
 	BookingLocation string    `json:"location"`
 }
 
-type userBooking struct {
+type UserBooking struct {
 	ID   uuid.UUID `json:"id"`
-	Name string    `josn:"name"`
+	Name string    `json:"name"`
+}
+
+type BookingData struct {
+	BookingID   uuid.UUID
+	BookingDate time.Time
+	Location    string
+
+	// User
+	UserID   uuid.UUID `gorm:"user_id"`
+	UserName string
+
+	// Mentor
+	MentorID   uuid.UUID
+	MentorName string
+
+	// Course
+	CourseID     uuid.UUID
+	CourseName   string
+	CourseDetail string
+
+	// Invoice
+	InvoiceID            uuid.UUID
+	InvoicePaymentMethod string
+	InvoicePaymentName   string
+	InvoicePaymentStatus string
+	InvoicePaymentAmount float64
+	InvoicePaymentFee    float64
+	InvoicePaymentTotal  float64
 }
