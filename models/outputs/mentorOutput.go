@@ -22,4 +22,3 @@ type GetPopularMentorOutput struct {
 	BaseOutput
 	Data []responses.MentorResponseDTO `json:"data"`
 }
-
