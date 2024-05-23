@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
+
 func FindCourseByName(courseName string) (database.Courses, error) {
 	var course database.Courses
 	timeout, err := time.ParseDuration((os.Getenv("TIMEOUT")))

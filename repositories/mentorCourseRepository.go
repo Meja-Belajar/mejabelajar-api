@@ -9,6 +9,7 @@ import (
 	"github.com/meja_belajar/models/database"
 )
 
+
 func InsertMentorCourse(mentorCourse database.MentorCourses) (database.MentorCourses, error){
 	timeout, err := time.ParseDuration((os.Getenv("TIMEOUT")))
 	if err != nil {
@@ -50,4 +51,3 @@ func FindMentorCourseByMentorID(mentorID string) ([]database.MentorCourses, erro
 	}
 	return mentorCourses, nil
 }
-

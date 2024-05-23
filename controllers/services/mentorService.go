@@ -1,7 +1,6 @@
 package services
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,10 +11,8 @@ import (
 )
 
 func RegisterMentor(c *gin.Context) {
-	log.Println("Register Mentor")
 	var RegisterMentorRequestDTO requests.RegisterMentorRequestDTO
 	if err := c.ShouldBindJSON(&RegisterMentorRequestDTO); err != nil {
-		log.Println("Error: ", err.Error()+" "+c.Request.RequestURI+RegisterMentorRequestDTO.UserID)
 		outputs := outputs.BadRequestOutput{
 			Code:    400,
 			Message: "Bad Request " + err.Error(),

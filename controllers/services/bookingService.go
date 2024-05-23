@@ -1,43 +1,64 @@
 package services
 
 import (
+	"context"
+	"fmt"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/meja_belajar/controllers/helpers"
 	"github.com/meja_belajar/models/requests"
 )
 
 func BookingService(router *gin.RouterGroup) {
-	router.GET("/bookings/:userID", GetBookingByUserID)
+	router.GET("/bookings/user/:userID", GetBookingByUserID)
 	router.GET("/booking/:bookingID", GetBookingByBookingID)
-	router.POST("/bookings", CreateBooking)
+	router.GET("/bookings/mentor/:mentorID", GetBookingByMentorID)
+
+	router.POST("/booking", CreateBooking)
 	router.DELETE("/booking/:bookingID", DeleteBooking)
 }
 
-func GetBookingByUserID(ctx *gin.Context) {
-	userID := ctx.Param("userID")
-	code, output := helpers.FindBookingByUserID(userID)
-	ctx.JSON(code, output)
+func GetBookingByUserID(c *gin.Context) {
+	userID := c.Param("userID")
+	fmt.Println("First Service")
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
+	defer cancel()
+	code, output := helpers.FindBookingByUserID(userID, ctx)
+	c.JSON(code, output)
 }
 
-func GetBookingByBookingID(ctx *gin.Context) {
-	BookingID := ctx.Param("bookingID")
+func GetBookingByBookingID(c *gin.Context) {
+	BookingID := c.Param("bookingID")
 	code, output := helpers.FindBookingByBookingID(BookingID)
-	ctx.JSON(code, output)
+	c.JSON(code, output)
 }
 
-func CreateBooking(ctx *gin.Context) {
+func GetBookingByMentorID(c *gin.Context) {
+	MentorId := c.Param("mentorID")
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
+	defer cancel()
+	code, output := helpers.FindBookingByMentorID(MentorId, ctx)
+	c.JSON(code, output)
+}
+
+func CreateBooking(c *gin.Context) {
 	var requestData requests.NewBookingRequestDTO
-	err := ctx.BindJSON(&requestData)
+	err := c.ShouldBindJSON(&requestData)
 	if err != nil {
-		ctx.JSON(500, gin.H{"message": "Internal Server Error"})
+		c.JSON(500, gin.H{"message": "Internal Server Error"})
 		return
 	}
-	code, output := helpers.CreateBooking(requestData)
-	ctx.JSON(code, output)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 3*time.Second)
+	defer cancel()
+	code, output := helpers.CreateBooking(ctx, requestData)
+	c.JSON(code, output)
 }
 
-func DeleteBooking(ctx *gin.Context) {
-	BookingID := ctx.Param("bookingID")
-	code, output := helpers.DeleteBookingByBookingId(BookingID)
-	ctx.JSON(code, output)
+func DeleteBooking(c *gin.Context) {
+	BookingID := c.Param("bookingID")
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 3*time.Second)
+	defer cancel()
+	code, output := helpers.DeleteBookingByBookingId(ctx, BookingID)
+	c.JSON(code, output)
 }

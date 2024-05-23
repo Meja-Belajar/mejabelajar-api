@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +16,6 @@ import (
 
 func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, interface{}) {
 	//validasi user exist
-	log.Print("Masuk helper")
 	user, err := repositories.FindUserByUserID(registerMentor.UserID)
 	if err == context.DeadlineExceeded {
 		return utils.HandleTimeout(err)
@@ -25,7 +23,6 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 	if err == gorm.ErrRecordNotFound {
 		return utils.HandleNotFound("User")
 	}
-	log.Print("User Found")
 
 	//validasi belum pernah jadi mentor
 	_, err = repositories.FindMentorByUserID(registerMentor.UserID)
@@ -61,9 +58,7 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 	var course database.Courses
 	//insert course
 	for _, courseName := range registerMentor.Courses {
-		log.Println("CourseName: ", courseName)
 		course, err = repositories.FindCourseByName(courseName)
-		log.Println("Course before IF: ", course)
 		//course belum terdaftar
 		if err != nil {
 			course = database.Courses{
@@ -78,7 +73,6 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 				return utils.HandleInternalServerError(err)
 			}
 		}
-		log.Println("Course after IF : ", course)
 		mentorCourse = database.MentorCourses{
 			MentorID:        mentor.ID,
 			CourseID:        course.ID,
@@ -87,7 +81,6 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 			Rating:          0,
 			HourlyRate:      0,
 		}
-		log.Println(mentorCourse)
 		mentorCourse, err = repositories.InsertMentorCourse(mentorCourse)
 		if err == context.DeadlineExceeded {
 			return utils.HandleTimeout(err)
@@ -156,7 +149,6 @@ func GetPopularMentor() (int, interface{}) {
 		//validasi jika user tidak ditemukan
 		if mentor.UserID != user.ID {
 			//print mentor dengan UserID yang tidak ada di table user
-			log.Printf("Mentor with ID %s has an wrong UserID", mentor.ID)
 			continue
 		}
 
@@ -185,7 +177,6 @@ func GetPopularMentor() (int, interface{}) {
 			}
 			if mentorCourse.CourseID != course.ID {
 				//print mentorCourse dengan CourseID yang tidak ada di table course
-				log.Printf("MentorCourse with ID %s has an wrong CourseID", mentorCourse.CourseID.String())
 				continue
 			}
 			courseResponseDTO = append(courseResponseDTO, responses.CourseResponseDTO{
@@ -251,7 +242,6 @@ func GetAllMentor() (int, interface{}) {
 		}
 		if mentor.UserID != user.ID {
 			//print mentor dengan UserID yang tidak ada di table user
-			log.Printf("Mentor with ID %s has an wrong UserID", mentor.ID)
 			continue
 		}
 
@@ -280,7 +270,6 @@ func GetAllMentor() (int, interface{}) {
 			}
 			if mentorCourse.CourseID != course.ID {
 				//print mentorCourse dengan CourseID yang tidak ada di table course
-				log.Printf("MentorCourse with ID %s has an wrong CourseID", mentorCourse.CourseID.String())
 				continue
 			}
 			courseResponseDTO = append(courseResponseDTO, responses.CourseResponseDTO{
