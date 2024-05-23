@@ -35,6 +35,7 @@ func ConfigureRouter() *gin.Engine {
 	services.BookingService(base)
 	services.UserServiceBasic(base)
 	services.MentorReviewService(base)
+	services.CourseService(base)
 	services.NotificationService(base)
 
 	return router

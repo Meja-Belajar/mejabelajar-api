@@ -55,7 +55,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 		IsActive:       true,
 		ProfilePicture: AddUserRequestDTO.ProfilePicture,
 	}
-	err = repositories.InsertUser(user)
+	user, err = repositories.InsertUser(user)
 
 	//validasi timeout
 	if err == context.DeadlineExceeded {
