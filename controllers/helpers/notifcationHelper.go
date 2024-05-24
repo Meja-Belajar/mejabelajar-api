@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/meja_belajar/models/DTO"
 	"github.com/meja_belajar/models/database"
@@ -24,7 +23,7 @@ func MakeNotification(ctx context.Context, booking responses.BookingResponseDTO)
 		"<br/>Course Name: " + booking.Course.Name +
 		"<br/>Course Detail: " + booking.Course.Detail
 	notification.Description = Description
-	fmt.Println(notification)
+
 	return repositories.CreateNotification(ctx, notification)
 }
 
@@ -32,18 +31,16 @@ func GetNotifications(ctx context.Context, userId string) (int, interface{}) {
 	notifications, err := repositories.GetNotifications(ctx, userId)
 
 	if err != nil {
-		return 500, outputs.InternalServerErrorOutput{Message: "Internal Server Error"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "Internal Server Error"}
 	}
 
 	if len(notifications) == 0 {
-		return 404, outputs.NotFoundOutput{Message: "Notification Not Found"}
+		return 404, outputs.NotFoundOutput{Code: 404, Message: "Notification Not Found"}
 	}
 
 	output := outputs.WebResponse{}
-	output.BaseOutput = outputs.BaseOutput{
-		Code:    200,
-		Message: "Success Get Notifications",
-	}
+	output.BaseOutput = outputs.BaseOutput{Code: 200, Message: "Success Get Notifications"}
+
 	output.Data = DTO.ToNotificationResponses(notifications)
 	return 200, output
 }

@@ -39,17 +39,9 @@ func FindBookingByUserID(userID string, ctx context.Context) (int, interface{}) 
 	}
 	defer rows.Close()
 
-	if !rows.Next() {
-		output := outputs.NotFoundOutput{
-			Code:    404,
-			Message: "Booking Not Found",
-		}
-		return 404, output
-	}
-
-	var bookings []responses.BookingResponseDTO
+	var bookings []responses.BookingResponseDTO = nil
 	var booking responses.BookingResponseDTO
-	for {
+	for rows.Next() {
 		err := rows.Scan(&booking.ID, &booking.User.ID, &booking.User.Name,
 			&booking.Mentor.ID, &booking.Mentor.Name,
 			&booking.Course.ID, &booking.Course.Name, &booking.Course.Detail,
@@ -57,7 +49,7 @@ func FindBookingByUserID(userID string, ctx context.Context) (int, interface{}) 
 			&booking.BookingDate, &booking.BookingLocation)
 
 		if err != nil {
-			output := outputs.NotFoundOutput{
+			output := outputs.InternalServerErrorOutput{
 				Code:    500,
 				Message: "Internal Server Error",
 			}
@@ -65,9 +57,14 @@ func FindBookingByUserID(userID string, ctx context.Context) (int, interface{}) 
 		}
 
 		bookings = append(bookings, booking)
-		if !rows.Next() {
-			break
+	}
+
+	if len(bookings) == 0 {
+		output := outputs.NotFoundOutput{
+			Code:    404,
+			Message: "Booking Not Found",
 		}
+		return 404, output
 	}
 
 	output := outputs.BookingByUserIdOutput{
@@ -88,15 +85,15 @@ func FindBookingByBookingID(bookingID string) (int, interface{}) {
 	var booking responses.BookingResponseDTO
 	rows, err := db.Table("bookings b").
 		WithContext(ctx).
-		Select("b.id, u.id, u.username, TableSub.mentorId, TableSub.mentorName, c.id, c.name, c.detail, i.id, i.payment_method, i.payment_name, i.payment_status, i.payment_amount, i.payment_fee, i.payment_total, b.date, b.location").
+		Select("b.id, u.id, u.username, sub.mentorId, sub.mentorName, c.id, c.name, c.detail, i.id, i.payment_method, i.payment_name, i.payment_status, i.payment_amount, i.payment_fee, i.payment_total, b.date, b.location").
 		Joins("JOIN users u ON b.user_id = u.id").
 		Joins("JOIN courses c ON b.course_id = c.id").
 		Joins("JOIN invoices i ON b.invoice_id = i.id").
-		Joins("JOIN (SELECT b2.id AS bookingID, m2.id AS mentorID, u2.username AS mentorName FROM bookings b2 JOIN mentors m2 ON b2.mentor_id = m2.id JOIN users u2 ON u2.id = m2.user_id WHERE b2.id = ?) AS TableSub ON b.id = TableSub.bookingID", bookingID).
+		Joins("JOIN (SELECT b2.id AS bookingID, m2.id AS mentorID, u2.username AS mentorName FROM bookings b2 JOIN mentors m2 ON b2.mentor_id = m2.id JOIN users u2 ON u2.id = m2.user_id WHERE b2.id = ?) AS sub ON b.id = sub.bookingID", bookingID).
 		Rows()
 
 	if err != nil {
-		output := outputs.NotFoundOutput{
+		output := outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Internal Server Error",
 		}
@@ -119,18 +116,76 @@ func FindBookingByBookingID(bookingID string) (int, interface{}) {
 		&booking.BookingDate, &booking.BookingLocation)
 
 	if err != nil {
-		output := outputs.NotFoundOutput{
+		output := outputs.InternalServerErrorOutput{
 			Code:    500,
 			Message: "Internal Server Error",
 		}
 		return 500, output
 	}
+
 	output := outputs.BookingByBookIdOutput{
 		BaseOutput: outputs.BaseOutput{
 			Code:    200,
 			Message: "Success: Booking with ID has been retrieved",
 		},
 		Data: booking,
+	}
+	return 200, output
+}
+
+func GetBookings(ctx context.Context) (int, interface{}) {
+	db := configs.GetDB()
+	rows, err := db.Table("bookings b").
+		WithContext(ctx).
+		Select("b.id, u.id, u.username, sub.mentorId, sub.mentorName, c.id, c.name, c.detail, i.id, i.payment_method, i.payment_name, i.payment_status, i.payment_amount, i.payment_fee, i.payment_total, b.date, b.location").
+		Joins("JOIN users u ON b.user_id = u.id").
+		Joins("JOIN courses c ON b.course_id = c.id").
+		Joins("JOIN invoices i ON b.invoice_id = i.id").
+		Joins("JOIN (SELECT b2.id AS bookingID, m2.id AS mentorID, u2.username AS mentorName FROM bookings b2 JOIN mentors m2 ON b2.mentor_id = m2.id JOIN users u2 ON u2.id = m2.user_id) AS sub ON b.id = sub.bookingID").
+		Rows()
+
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Internal Server Error",
+		}
+		return 500, output
+	}
+	defer rows.Close()
+
+	var bookings []responses.BookingResponseDTO = nil
+	var booking responses.BookingResponseDTO
+	for rows.Next() {
+		err := rows.Scan(&booking.ID, &booking.User.ID, &booking.User.Name,
+			&booking.Mentor.ID, &booking.Mentor.Name,
+			&booking.Course.ID, &booking.Course.Name, &booking.Course.Detail,
+			&booking.Invoice.ID, &booking.Invoice.Payment_method, &booking.Invoice.Payment_name, &booking.Invoice.Payment_status, &booking.Invoice.Payment_amount, &booking.Invoice.Payment_fee, &booking.Invoice.Payment_total,
+			&booking.BookingDate, &booking.BookingLocation)
+
+		if err != nil {
+			output := outputs.NotFoundOutput{
+				Code:    500,
+				Message: "Internal Server Error",
+			}
+			return 500, output
+		}
+		bookings = append(bookings, booking)
+	}
+
+	if len(bookings) == 0 {
+		output := outputs.NotFoundOutput{
+			Code:    404,
+			Message: "Bookings Not found",
+		}
+		return 404, output
+	}
+
+	output := outputs.BookingByUserIdOutput{
+		BaseOutput: outputs.BaseOutput{
+			Code:    200,
+			Message: "Success: List of bookings has been retrieved",
+		},
+		Data: bookings,
 	}
 	return 200, output
 }
@@ -163,27 +218,27 @@ func CreateBooking(ctx context.Context, bookingData requests.NewBookingRequestDT
 
 	booking.UserID, err = uuid.Parse(bookingData.UserID)
 	if err != nil {
-		return 500, outputs.InternalServerErrorOutput{Message: "error parsing UserID"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "error parsing UserID"}
 	}
 
 	booking.MentorID, err = uuid.Parse(bookingData.MentorID)
 	if err != nil {
-		return 500, outputs.InternalServerErrorOutput{Message: "error parsing Mentor ID"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "error parsing Mentor ID"}
 	}
 
 	booking.CourseID, err = uuid.Parse(bookingData.CourseID)
 	if err != nil {
-		return 500, outputs.InternalServerErrorOutput{Message: "error parsing Course ID"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "error parsing Course ID"}
 	}
 
 	inputtedBooking, err := repositories.CreateBooking(ctx, booking)
 	if err != nil {
-		return 500, outputs.InternalServerErrorOutput{Message: "Internal Server Error"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "Internal Server Error"}
 	}
 
 	code, output := FindBookingByBookingID(inputtedBooking.ID.String())
 	if code != 200 {
-		return 500, outputs.InternalServerErrorOutput{Message: "Internal Server Error"}
+		return 500, outputs.InternalServerErrorOutput{Code: 500, Message: "Internal Server Error"}
 	}
 
 	baseOutput := output.(outputs.BookingByBookIdOutput).BaseOutput
@@ -191,7 +246,6 @@ func CreateBooking(ctx context.Context, bookingData requests.NewBookingRequestDT
 	baseOutput.Message = "Success: Booking Created"
 	err = MakeNotification(ctx, output.(outputs.BookingByBookIdOutput).Data)
 
-	fmt.Println("TEST 5")
 	if err != nil {
 		baseOutput.Code = 500
 	}
@@ -222,6 +276,16 @@ func DeleteBookingByBookingId(ctx context.Context, bookID string) (int, interfac
 			return 500, output
 		}
 	}
+
+	err = db.Table("bookings").Delete(&booking).Error
+	if err != nil {
+		output := outputs.InternalServerErrorOutput{
+			Code:    500,
+			Message: "Internal Server Error",
+		}
+		return 500, output
+	}
+
 	output := outputs.BaseOutput{
 		Code:    201,
 		Message: fmt.Sprintf("Success: Booking %s has been deleted", bookID),
