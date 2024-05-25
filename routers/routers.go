@@ -38,7 +38,5 @@ func ConfigureRouter() *gin.Engine {
 	services.CourseService(base)
 	services.NotificationService(base)
 
-
-
 	return router
 }

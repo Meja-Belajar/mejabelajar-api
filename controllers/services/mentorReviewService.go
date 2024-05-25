@@ -30,7 +30,11 @@ func GetMentorReview(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, output)
 		return
 	}
-	code, output := helpers.GetMentorReview(requests.GetMentorReviewsRequestDTO{ID: reviewID})
+	// code, output := helpers.GetMentorReview(requests.GetMentorReviewsRequestDTO{ID: reviewID})
+	requestDTO := requests.GetMentorReviewsRequestDTO{ID: reviewID}
+	// Call the helper function to get the mentor review
+	code, output := helpers.GetMentorReview(requestDTO)
+
 	c.JSON(code, output)
 }
 
@@ -65,7 +69,7 @@ func UpdateMentorReview(c *gin.Context) {
 }
 
 func MentorReviewService(router *gin.RouterGroup){
-	router.POST("/mentor-reviewssss/:id", GetMentorReview)
+	router.GET("/mentor-review/:id", GetMentorReview)
 	router.POST("/mentor-review/create", CreateMentorReview)
 	router.POST("/mentor-review/update", UpdateMentorReview)
 }
