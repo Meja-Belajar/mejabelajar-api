@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/meja_belajar/models/DTO"
