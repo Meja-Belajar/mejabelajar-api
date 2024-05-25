@@ -29,13 +29,13 @@ func ConfigureRouter() *gin.Engine {
 	auth.Use(middlewares.RequiredAuth())
 	services.UserServiceAuth(auth)
 	services.MentorServiceAuth(auth)
+	services.BookingService(auth)
+	services.NotificationService(auth)
+	services.MentorReviewService(auth)
 
 	//group basic
 	base := router.Group("api/v1")
-	services.BookingService(base)
 	services.UserServiceBasic(base)
-	services.MentorReviewService(base)
-	services.NotificationService(base)
-
+	
 	return router
 }

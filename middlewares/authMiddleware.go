@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,12 @@ func RequiredAuth() gin.HandlerFunc {
 		//get the cookie
 		tokenString, err := c.Cookie("Authorization")
 		if err != nil {
+			log.Println(err)
 			c.AbortWithStatusJSON(
 				http.StatusUnauthorized,
 				outputs.UnauthorizedOutput{
 					Code:    401,
-					Message: "Unauthorized",
+					Message: "Unauthorized token not found",
 				},
 			)
 			return
@@ -28,7 +30,7 @@ func RequiredAuth() gin.HandlerFunc {
 				http.StatusUnauthorized,
 				outputs.UnauthorizedOutput{
 					Code:    401,
-					Message: "Unauthorized",
+					Message: "Unauthorized is expired or invalid",
 				},
 			)
 			return

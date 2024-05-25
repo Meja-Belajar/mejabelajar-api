@@ -10,7 +10,6 @@ import (
 	"github.com/meja_belajar/utils"
 )
 
-
 func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface{}) {
 	db := configs.GetDB()
 	var course database.Courses
@@ -28,14 +27,12 @@ func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
+		CourseID:  course.ID.String(),
 		Name:      course.Name,
 		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		Rating:    0,
+		HourlyRate: 0,
+		
 	}
 	return 200, output
 }
@@ -58,14 +55,11 @@ func AddCourse(AddCourseRequestDTO requests.AddCourseRequestDTO) (int, interface
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
+		CourseID:  course.ID.String(),
 		Name:      course.Name,
 		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		Rating:    0,
+		HourlyRate: 0,
 	}
 	return 200, output
 }
@@ -97,14 +91,11 @@ func UpdateCourse(UpdateCourseRequestDTO requests.UpdateCourseRequestDTO) (int, 
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
+		CourseID:  course.ID.String(),
 		Name:      course.Name,
 		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		Rating:    0,
+		HourlyRate: 0,
 	}
 	return 200, output
 }

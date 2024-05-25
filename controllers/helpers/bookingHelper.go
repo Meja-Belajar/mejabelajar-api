@@ -136,6 +136,7 @@ func FindBookingByBookingID(bookingID string) (int, interface{}) {
 }
 
 func CreateBooking(ctx context.Context, bookingData requests.NewBookingRequestDTO) (int, interface{}) {
+
 	invoice := database.Invoices{
 		PaymentMethod: bookingData.Invoice.Payment_method,
 		PaymentName:   bookingData.Invoice.Payment_name,

@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -49,6 +50,9 @@ func CreateBooking(c *gin.Context) {
 		c.JSON(500, gin.H{"message": "Internal Server Error"})
 		return
 	}
+	
+	log.Println(requestData);
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 3*time.Second)
 	defer cancel()
 	code, output := helpers.CreateBooking(ctx, requestData)

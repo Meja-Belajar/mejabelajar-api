@@ -37,7 +37,8 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 	code, output, tokenString := helpers.LoginUser(LoginUserRequestDTO)
-	c.SetCookie("Authorization", tokenString, 3600*24, "", "", true, true)
+	c.SetCookie("Authorization", tokenString, 3600*24, "/", "localhost", true, true)
+	c.SetSameSite(http.StatusOK)
 	c.JSON(code, output)
 }
 

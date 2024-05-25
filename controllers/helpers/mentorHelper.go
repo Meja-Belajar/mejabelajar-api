@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -402,11 +403,14 @@ func GetMentorByMentorID(mentorID string) (int, interface{}) {
 }
 
 func GetMentorByUserID(userID string) (int, interface{}) {
+	log.Println("in");
+
 	user, err := repositories.FindUserByUserID(userID)
 	//validasi timeout
 	if err == context.DeadlineExceeded {
 		return utils.HandleTimeout(err)
 	}
+	
 	if err == gorm.ErrRecordNotFound {
 		return utils.HandleNotFound("User")
 	}
