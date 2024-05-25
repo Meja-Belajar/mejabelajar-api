@@ -25,7 +25,7 @@ func MakeNotification(ctx context.Context, booking responses.BookingResponseDTO)
 		"<br/>Course Name: " + booking.Course.Name +
 		"<br/>Course Detail: " + booking.Course.Detail
 	notification.Description = Description
-	fmt.Println(notification)
+
 	return repositories.CreateNotification(ctx, notification)
 }
 
