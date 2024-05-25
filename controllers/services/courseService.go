@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/meja_belajar/controllers/helpers"
 	"github.com/meja_belajar/models/outputs"
 	"github.com/meja_belajar/models/requests"
@@ -11,17 +12,20 @@ import (
 
 // Get Course by ID
 func GetCourse(c *gin.Context) {
-	var GetCourseRequestDTO requests.GetCourseRequestDTO
-	
-	if err := c.ShouldBindJSON(&GetCourseRequestDTO); err != nil {
-		outputs := outputs.BadRequestOutput{
+	courseID := c.Param("id")
+
+	if _, err := uuid.Parse(courseID); err != nil {
+		output := outputs.BadRequestOutput{
 			Code:    400,
 			Message: "Bad Request: " + err.Error(),
 		}
-		c.JSON(http.StatusBadRequest, outputs)
+		c.JSON(http.StatusBadRequest, output)
 		return
 	}
-	code, output := helpers.GetCourse(GetCourseRequestDTO)
+	requestDTO := requests.GetCourseRequestDTO{CourseID: courseID}
+	// Call the helper function to get the mentor review
+	code, output := helpers.GetCourse(requestDTO)
+
 	c.JSON(code, output)
 }
 
@@ -56,7 +60,7 @@ func UpdateCourse(c *gin.Context) {
 }
 
 func CourseService(router *gin.RouterGroup){
-	router.POST("/course/:id", GetCourse)
+	router.GET("/course/:id", GetCourse)
 	router.POST("/course/create", AddCourse)
 	router.POST("/course/update", UpdateCourse)
 }
