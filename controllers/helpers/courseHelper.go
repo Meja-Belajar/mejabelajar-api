@@ -10,10 +10,11 @@ import (
 	"github.com/meja_belajar/utils"
 )
 
-
+// by course id
 func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface{}) {
 	db := configs.GetDB()
 	var course database.Courses
+	var mentorCourse database.MentorCourses
 
 	err := db.First(&course, utils.StringToUUID(GetCourseRequestDTO.CourseID)).Error
 	if err != nil {
@@ -31,10 +32,10 @@ func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface
 		CourseID: 	  	 course.ID.String(),
 		Name:     		 course.Name,
 		Detail:   		 course.Detail,
-		Rating:   		 course.Rating,
-		HourlyRate: 	 course.HourlyRate,
-		CourseStartTime: course.CourseStartTime,
-		CourseEndTime: 	 course.CourseEndTime,
+		Rating:   		 mentorCourse.Rating,
+		HourlyRate: 	 mentorCourse.HourlyRate,
+		CourseStartTime: mentorCourse.CourseStartTime,
+		CourseEndTime: 	 mentorCourse.CourseEndTime,
 	}
 	return 200, output
 }
@@ -44,10 +45,6 @@ func AddCourse(AddCourseRequestDTO requests.AddCourseRequestDTO) (int, interface
 	course := database.Courses{
 		Name			:    AddCourseRequestDTO.Name,
 		Detail			:    AddCourseRequestDTO.Detail,
-		Rating			:    AddCourseRequestDTO.Rating,
-		HourlyRate		: 	 AddCourseRequestDTO.HourlyRate,
-		CourseStartTime	: 	 AddCourseRequestDTO.CourseStartTime,
-		CourseEndTime	: 	 AddCourseRequestDTO.CourseEndTime,
 		IsActive		:  	 AddCourseRequestDTO.IsActive,
 		CreatedBy		: 	 AddCourseRequestDTO.CreatedBy,
 	}
@@ -64,10 +61,6 @@ func AddCourse(AddCourseRequestDTO requests.AddCourseRequestDTO) (int, interface
 		CourseID		:   course.ID.String(),
 		Name			:   course.Name,
 		Detail			:   course.Detail,
-		Rating			:   course.Rating,
-		HourlyRate		: 	course.HourlyRate,
-		CourseStartTime	: 	course.CourseStartTime,
-		CourseEndTime	: 	course.CourseEndTime,
 	}
 	return 200, output
 }
@@ -87,10 +80,6 @@ func UpdateCourse(UpdateCourseRequestDTO requests.UpdateCourseRequestDTO) (int, 
 
 	course.Name = UpdateCourseRequestDTO.Name
 	course.Detail = UpdateCourseRequestDTO.Detail
-	course.Rating = UpdateCourseRequestDTO.Rating
-	course.HourlyRate = UpdateCourseRequestDTO.HourlyRate
-	course.CourseStartTime = UpdateCourseRequestDTO.CourseStartTime
-	course.CourseEndTime = UpdateCourseRequestDTO.CourseEndTime
 	course.IsActive = UpdateCourseRequestDTO.IsActive
 	course.UpdatedBy = UpdateCourseRequestDTO.UpdatedBy
 
@@ -106,10 +95,6 @@ func UpdateCourse(UpdateCourseRequestDTO requests.UpdateCourseRequestDTO) (int, 
 		CourseID		:   course.ID.String(),
 		Name			:   course.Name,
 		Detail			:   course.Detail,
-		Rating			:   course.Rating,
-		HourlyRate		: 	course.HourlyRate,
-		CourseStartTime	: 	course.CourseStartTime,
-		CourseEndTime	: 	course.CourseEndTime,
 	}
 	return 200, output
 }
