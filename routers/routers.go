@@ -36,6 +36,7 @@ func ConfigureRouter() *gin.Engine {
 	services.UserServiceBasic(base)
 	services.MentorReviewService(base)
 	services.NotificationService(base)
+	services.InvoiceService(base)
 
 	return router
 }

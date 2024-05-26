@@ -2,7 +2,7 @@ package responses
 
 import "github.com/google/uuid"
 
-type invoiceResponseDTO struct {
+type InvoiceResponseDTO struct {
 	ID             uuid.UUID `json:"id"`
 	Payment_method string    `json:"payment_method"`
 	Payment_name   string    `json:"payment_name"`

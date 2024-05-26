@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/meja_belajar/configs"
 	"github.com/meja_belajar/models/database"
 	"github.com/meja_belajar/models/outputs"
 	"github.com/meja_belajar/models/requests"
@@ -203,6 +205,74 @@ func GetUserByID(userID string) (int, interface{}) {
 			IsActive:       user.IsActive,
 			IsMentor:       IsMentor,
 		},
+	}
+	return 200, output
+}
+
+func UpdateUser(UpdateUserRequestDTO requests.UpdateUserRequestDTO) (int, interface{}) {
+	db := configs.GetDB()
+	var user database.Users
+
+	err := db.First(&user, "id = ?", utils.StringToUUID(UpdateUserRequestDTO.UserID)).Error
+	if err != nil {
+		return utils.HandleInternalServerError(err)
+	}
+
+	if user.ID == uuid.Nil {
+		return 404, "User not found"
+	}
+
+	if UpdateUserRequestDTO.UserName != "" {
+		user.Username = UpdateUserRequestDTO.UserName
+	}
+
+	if UpdateUserRequestDTO.University != "" {
+		user.University = UpdateUserRequestDTO.University
+	}
+
+	if UpdateUserRequestDTO.Email != "" {
+		user.Email = UpdateUserRequestDTO.Email
+	}
+
+	if UpdateUserRequestDTO.PhoneNumber != "" {
+		user.Phone = UpdateUserRequestDTO.PhoneNumber
+	}
+
+	if UpdateUserRequestDTO.ProfilePicture != "" {
+		user.ProfilePicture = UpdateUserRequestDTO.ProfilePicture
+	}
+
+	if UpdateUserRequestDTO.Description != "" {
+		user.Description = UpdateUserRequestDTO.Description
+	}
+
+	if UpdateUserRequestDTO.BOD != "" {
+		bod, err := time.Parse("2006-01-02T15:04:05Z", UpdateUserRequestDTO.BOD)
+		if err != nil {
+			return utils.HandleBadRequest("Invalid BOD format")
+		}
+		user.BOD = bod
+	}
+
+	err = db.Save(&user).Error
+	if err != nil {
+		return utils.HandleInternalServerError(err)
+	}
+
+	output := outputs.UpdateUserOutput{}
+	output.Code = 200
+	output.Message = "Success"
+	output.Data = responses.UserResponseDTO{
+		ID:             user.ID,
+		UserName:       user.Username,
+		University:     user.University,
+		Email:          user.Email,
+		PhoneNumber:    user.Phone,
+		Description:    user.Description,
+		ProfilePicture: user.ProfilePicture,
+		BOD:            user.BOD,
+		IsActive:       user.IsActive,
+		IsMentor:       UpdateUserRequestDTO.IsMentor,
 	}
 	return 200, output
 }
