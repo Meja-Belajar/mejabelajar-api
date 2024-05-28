@@ -60,8 +60,24 @@ func GetUserByID(c *gin.Context) {
 func UserServiceBasic(router *gin.RouterGroup) {
 	router.POST("/users/register", RegisterUser)
 	router.POST("/users/login", LoginUser)
+	router.POST("/users/update", UpdateUser)
 }
 
 func UserServiceAuth(router *gin.RouterGroup) {
 	router.GET("/users/:id", GetUserByID)
+}
+
+func UpdateUser(c *gin.Context) {
+	var UpdateUserRequestDTO requests.UpdateUserRequestDTO
+
+	if err := c.ShouldBindJSON(&UpdateUserRequestDTO); err != nil {
+		outputs := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: " + err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, outputs)
+		return
+	}
+	code, output := helpers.UpdateUser(UpdateUserRequestDTO)
+	c.JSON(code, output)
 }

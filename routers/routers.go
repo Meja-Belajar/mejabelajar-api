@@ -40,6 +40,7 @@ func ConfigureRouter() *gin.Engine {
 	services.CourseService(base)
 	services.NotificationService(base)
 	services.SearchService(base)
+	services.InvoiceService(base)
 
 	return router
 }
