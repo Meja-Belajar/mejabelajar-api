@@ -39,6 +39,10 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 	if err != nil {
 		return utils.HandleInternalServerError(err)
 	}
+	bod, err := time.Parse("2006-01-02T15:04:05Z", registerMentor.BOD)
+	if err != nil {
+		return utils.HandleBadRequest("Invalid BOD format")
+	}
 	mentor := database.Mentors{
 		UserID:             userID,
 		Revenue:            0,
@@ -115,7 +119,7 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 			Phone:              user.Phone,
 			Description:        user.Description,
 			ProfilePicture:     user.ProfilePicture,
-			BOD:                user.BOD,
+			BOD:                bod,
 			Revenue:            mentor.Revenue,
 			Rating:             mentor.Rating,
 			TotalTeachingHours: mentor.TotalTeachingHours,

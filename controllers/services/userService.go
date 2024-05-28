@@ -57,16 +57,6 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(code, output)
 }
 
-func UserServiceBasic(router *gin.RouterGroup) {
-	router.POST("/users/register", RegisterUser)
-	router.POST("/users/login", LoginUser)
-	router.POST("/users/update", UpdateUser)
-}
-
-func UserServiceAuth(router *gin.RouterGroup) {
-	router.GET("/users/:id", GetUserByID)
-}
-
 func UpdateUser(c *gin.Context) {
 	var UpdateUserRequestDTO requests.UpdateUserRequestDTO
 
@@ -81,3 +71,14 @@ func UpdateUser(c *gin.Context) {
 	code, output := helpers.UpdateUser(UpdateUserRequestDTO)
 	c.JSON(code, output)
 }
+
+func UserServiceBasic(router *gin.RouterGroup) {
+	router.POST("/users/register", RegisterUser)
+	router.POST("/users/login", LoginUser)
+}
+
+func UserServiceAuth(router *gin.RouterGroup) {
+	router.POST("/users/update", UpdateUser)
+	router.GET("/users/:id", GetUserByID)
+}
+
