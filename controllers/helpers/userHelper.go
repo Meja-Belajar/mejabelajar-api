@@ -222,37 +222,18 @@ func UpdateUser(UpdateUserRequestDTO requests.UpdateUserRequestDTO) (int, interf
 		return 404, "User not found"
 	}
 
-	if UpdateUserRequestDTO.UserName != "" {
-		user.Username = UpdateUserRequestDTO.UserName
-	}
+	user.Username = UpdateUserRequestDTO.UserName
+	user.University = UpdateUserRequestDTO.University
+	user.Email = UpdateUserRequestDTO.Email
+	user.Phone = UpdateUserRequestDTO.PhoneNumber
+	user.ProfilePicture = UpdateUserRequestDTO.ProfilePicture
+	user.Description = UpdateUserRequestDTO.Description
 
-	if UpdateUserRequestDTO.University != "" {
-		user.University = UpdateUserRequestDTO.University
+	bod, err := time.Parse("2006-01-02T15:04:05Z", UpdateUserRequestDTO.BOD)
+	if err != nil {
+		return utils.HandleBadRequest("Invalid BOD format")
 	}
-
-	if UpdateUserRequestDTO.Email != "" {
-		user.Email = UpdateUserRequestDTO.Email
-	}
-
-	if UpdateUserRequestDTO.PhoneNumber != "" {
-		user.Phone = UpdateUserRequestDTO.PhoneNumber
-	}
-
-	if UpdateUserRequestDTO.ProfilePicture != "" {
-		user.ProfilePicture = UpdateUserRequestDTO.ProfilePicture
-	}
-
-	if UpdateUserRequestDTO.Description != "" {
-		user.Description = UpdateUserRequestDTO.Description
-	}
-
-	if UpdateUserRequestDTO.BOD != "" {
-		bod, err := time.Parse("2006-01-02T15:04:05Z", UpdateUserRequestDTO.BOD)
-		if err != nil {
-			return utils.HandleBadRequest("Invalid BOD format")
-		}
-		user.BOD = bod
-	}
+	user.BOD = bod
 
 	err = db.Save(&user).Error
 	if err != nil {

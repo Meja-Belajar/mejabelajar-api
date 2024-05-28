@@ -15,10 +15,10 @@ import (
 func InvoiceService(router *gin.RouterGroup) {
 	router.GET("/invoices/user/:userID", GetInvoiceByUserID)
 	router.GET("/invoice/:invoiceID", GetInvoiceByID)
+	router.GET("/invoices", GetAllInvoices)
 
 	router.POST("/invoice/update", UpdateInvoiceStatus)
 }
-
 
 func GetInvoiceByUserID(c *gin.Context) {
 	userID := c.Param("userID")
@@ -26,6 +26,13 @@ func GetInvoiceByUserID(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
 	defer cancel()
 	code, output := helpers.FindInvoiceByUserID(userID, ctx)
+	c.JSON(code, output)
+}
+
+func GetAllInvoices(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
+	defer cancel()
+	code, output := helpers.FindAllInvoice(ctx)
 	c.JSON(code, output)
 }
 
