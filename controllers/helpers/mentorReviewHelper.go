@@ -40,13 +40,7 @@ func GetMentorReview(GetMentorReviewsRequestDTO requests.GetMentorReviewsRequest
 	output.Message = "Success"
 	output.Data = responses.MentorReviewsResponseDTO{
 		ID:          mentorReview.ID,
-		MentorID:    mentorReview.MentorID,
 		Description: mentorReview.Description,
-		IsActive:    mentorReview.IsActive,
-		CreatedBy:   mentorReview.CreatedBy,	
-		UpdatedBy:   mentorReview.UpdatedBy,
-		CreatedAt:   mentorReview.CreatedAt,
-		UpdatedAt:   mentorReview.UpdatedAt,
 	}
 	return 200, output		
 }
@@ -72,13 +66,7 @@ func CreateMentorReview(CreateMentorReviewRequestDTO requests.CreateMentorReview
 	output.Message = "Success"
 	output.Data = responses.MentorReviewsResponseDTO{
 		ID:          mentorReview.ID,
-		MentorID:    mentorReview.MentorID,
 		Description: mentorReview.Description,
-		IsActive:    mentorReview.IsActive,
-		CreatedBy:   mentorReview.CreatedBy,
-		UpdatedBy:   mentorReview.UpdatedBy,
-		CreatedAt:   mentorReview.CreatedAt,
-		UpdatedAt:   mentorReview.UpdatedAt,
 	}
 	return 201, output
 }
@@ -114,13 +102,7 @@ func UpdateMentorReview(UpdateMentorReviewRequestDTO requests.UpdateMentorReview
 	output.Message = "Success"
 	output.Data = responses.MentorReviewsResponseDTO{
 		ID:          mentorReview.ID,
-		MentorID:    mentorReview.MentorID,
 		Description: mentorReview.Description,
-		IsActive:    mentorReview.IsActive,
-		CreatedBy:   mentorReview.CreatedBy,
-		UpdatedBy:   mentorReview.UpdatedBy,
-		CreatedAt:   mentorReview.CreatedAt,
-		UpdatedAt:   mentorReview.UpdatedAt,
 	}
 	return 200, output
 }

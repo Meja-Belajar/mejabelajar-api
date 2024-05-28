@@ -37,7 +37,8 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 	code, output, tokenString := helpers.LoginUser(LoginUserRequestDTO)
-	c.SetCookie("Authorization", tokenString, 3600*24, "", "", true, true)
+	c.SetCookie("Authorization", tokenString, 3600*24, "/", "localhost", true, true)
+	c.SetSameSite(http.StatusOK)
 	c.JSON(code, output)
 }
 
@@ -56,11 +57,28 @@ func GetUserByID(c *gin.Context) {
 	c.JSON(code, output)
 }
 
+func UpdateUser(c *gin.Context) {
+	var UpdateUserRequestDTO requests.UpdateUserRequestDTO
+
+	if err := c.ShouldBindJSON(&UpdateUserRequestDTO); err != nil {
+		outputs := outputs.BadRequestOutput{
+			Code:    400,
+			Message: "Bad Request: " + err.Error(),
+		}
+		c.JSON(http.StatusBadRequest, outputs)
+		return
+	}
+	code, output := helpers.UpdateUser(UpdateUserRequestDTO)
+	c.JSON(code, output)
+}
+
 func UserServiceBasic(router *gin.RouterGroup) {
 	router.POST("/users/register", RegisterUser)
 	router.POST("/users/login", LoginUser)
 }
 
 func UserServiceAuth(router *gin.RouterGroup) {
+	router.POST("/users/update", UpdateUser)
 	router.GET("/users/:id", GetUserByID)
 }
+

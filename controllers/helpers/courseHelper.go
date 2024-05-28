@@ -10,12 +10,13 @@ import (
 	"github.com/meja_belajar/utils"
 )
 
-
+// by course id
 func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface{}) {
 	db := configs.GetDB()
 	var course database.Courses
+	var mentorCourse database.MentorCourses
 
-	err := db.First(&course, utils.StringToUUID(GetCourseRequestDTO.ID)).Error
+	err := db.First(&course, utils.StringToUUID(GetCourseRequestDTO.CourseID)).Error
 	if err != nil {
 		return 500, err.Error()
 	}
@@ -28,14 +29,13 @@ func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
-		Name:      course.Name,
-		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		CourseID: 	  	 course.ID.String(),
+		Name:     		 course.Name,
+		Detail:   		 course.Detail,
+		Rating:   		 mentorCourse.Rating,
+		HourlyRate: 	 mentorCourse.HourlyRate,
+		CourseStartTime: mentorCourse.CourseStartTime,
+		CourseEndTime: 	 mentorCourse.CourseEndTime,
 	}
 	return 200, output
 }
@@ -43,10 +43,10 @@ func GetCourse(GetCourseRequestDTO requests.GetCourseRequestDTO) (int, interface
 func AddCourse(AddCourseRequestDTO requests.AddCourseRequestDTO) (int, interface{}) {
 	db := configs.GetDB()
 	course := database.Courses{
-		Name:      AddCourseRequestDTO.Name,
-		Detail:    AddCourseRequestDTO.Detail,
-		IsActive:  AddCourseRequestDTO.IsActive,
-		CreatedBy: AddCourseRequestDTO.CreatedBy,
+		Name			:    AddCourseRequestDTO.Name,
+		Detail			:    AddCourseRequestDTO.Detail,
+		IsActive		:  	 AddCourseRequestDTO.IsActive,
+		CreatedBy		: 	 AddCourseRequestDTO.CreatedBy,
 	}
 
 	err := db.Create(&course).Error
@@ -58,14 +58,9 @@ func AddCourse(AddCourseRequestDTO requests.AddCourseRequestDTO) (int, interface
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
-		Name:      course.Name,
-		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		CourseID		:   course.ID.String(),
+		Name			:   course.Name,
+		Detail			:   course.Detail,
 	}
 	return 200, output
 }
@@ -74,7 +69,7 @@ func UpdateCourse(UpdateCourseRequestDTO requests.UpdateCourseRequestDTO) (int, 
 	db := configs.GetDB()
 	var course database.Courses
 
-	err := db.First(&course, "id = ?", utils.StringToUUID(UpdateCourseRequestDTO.ID)).Error
+	err := db.First(&course, "id = ?", utils.StringToUUID(UpdateCourseRequestDTO.CourseID)).Error
 	if err != nil {
 		return 500, err.Error()
 	}
@@ -97,14 +92,9 @@ func UpdateCourse(UpdateCourseRequestDTO requests.UpdateCourseRequestDTO) (int, 
 	output.Code = 200
 	output.Message = "Success"
 	output.Data = responses.CourseResponseDTO{
-		ID:        course.ID,
-		Name:      course.Name,
-		Detail:    course.Detail,
-		IsActive:  course.IsActive,
-		CreatedBy: course.CreatedBy,
-		UpdatedBy: course.UpdatedBy,
-		CreatedAt: course.CreatedAt,
-		UpdatedAt: course.UpdatedAt,
+		CourseID		:   course.ID.String(),
+		Name			:   course.Name,
+		Detail			:   course.Detail,
 	}
 	return 200, output
 }

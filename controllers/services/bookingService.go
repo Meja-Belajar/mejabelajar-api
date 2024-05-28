@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +11,7 @@ import (
 )
 
 func BookingService(router *gin.RouterGroup) {
+	router.GET("/bookings", GetBookings)
 	router.GET("/bookings/user/:userID", GetBookingByUserID)
 	router.GET("/booking/:bookingID", GetBookingByBookingID)
 	router.GET("/bookings/mentor/:mentorID", GetBookingByMentorID)
@@ -19,9 +20,15 @@ func BookingService(router *gin.RouterGroup) {
 	router.DELETE("/booking/:bookingID", DeleteBooking)
 }
 
+func GetBookings(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
+	defer cancel()
+	code, output := helpers.GetBookings(ctx)
+	c.JSON(code, output)
+}
+
 func GetBookingByUserID(c *gin.Context) {
 	userID := c.Param("userID")
-	fmt.Println("First Service")
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 1*time.Second)
 	defer cancel()
 	code, output := helpers.FindBookingByUserID(userID, ctx)
@@ -49,6 +56,9 @@ func CreateBooking(c *gin.Context) {
 		c.JSON(500, gin.H{"message": "Internal Server Error"})
 		return
 	}
+	
+	log.Println(requestData);
+
 	ctx, cancel := context.WithTimeout(c.Request.Context(), 3*time.Second)
 	defer cancel()
 	code, output := helpers.CreateBooking(ctx, requestData)

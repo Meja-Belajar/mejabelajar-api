@@ -10,22 +10,21 @@ import (
 	"gorm.io/gorm"
 )
 
-func InsertUser(user database.Users) error {
-	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
-	if err != nil {
-		return err
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
+func InsertUser(user database.Users) (database.Users, error) {
+    timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
+    if err != nil {
+        return user, err
+    }
+    ctx, cancel := context.WithTimeout(context.Background(), timeout)
+    defer cancel()
 
-	db := configs.GetDB().WithContext(ctx)
+    db := configs.GetDB().WithContext(ctx)
 
-	err = db.Create(&user).Error
-	if ctx.Err() == context.DeadlineExceeded {
-		return ctx.Err()
-	}
-
-	return err
+    err = db.Create(&user).Error
+    if ctx.Err() == context.DeadlineExceeded {
+        return user, ctx.Err()
+    }
+    return user,err
 }
 
 func FindUserByEmail(email string) (database.Users, error) {

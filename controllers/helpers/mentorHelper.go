@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,6 +38,10 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 	userID, err := uuid.Parse(registerMentor.UserID)
 	if err != nil {
 		return utils.HandleInternalServerError(err)
+	}
+	bod, err := time.Parse("2006-01-02T15:04:05Z", registerMentor.BOD)
+	if err != nil {
+		return utils.HandleBadRequest("Invalid BOD format")
 	}
 	mentor := database.Mentors{
 		UserID:             userID,
@@ -114,7 +119,7 @@ func RegisterMentor(registerMentor requests.RegisterMentorRequestDTO) (int, inte
 			Phone:              user.Phone,
 			Description:        user.Description,
 			ProfilePicture:     user.ProfilePicture,
-			BOD:                user.BOD,
+			BOD:                bod,
 			Revenue:            mentor.Revenue,
 			Rating:             mentor.Rating,
 			TotalTeachingHours: mentor.TotalTeachingHours,
@@ -402,11 +407,14 @@ func GetMentorByMentorID(mentorID string) (int, interface{}) {
 }
 
 func GetMentorByUserID(userID string) (int, interface{}) {
+	log.Println("in");
+
 	user, err := repositories.FindUserByUserID(userID)
 	//validasi timeout
 	if err == context.DeadlineExceeded {
 		return utils.HandleTimeout(err)
 	}
+	
 	if err == gorm.ErrRecordNotFound {
 		return utils.HandleNotFound("User")
 	}

@@ -15,8 +15,8 @@ type MentorResponseDTO struct {
 	BOD                time.Time           `json:"bod"`
 	Revenue            float64             `json:"revenue"`
 	Rating             float64             `json:"rating"`
-	TotalTeachingHours int             `json:"total_teaching_hours"`
-	TeachingFrequency  int             `json:"teaching_frequency"`
+	TotalTeachingHours int                 `json:"total_teaching_hours"`
+	TeachingFrequency  int                 `json:"teaching_frequency"`
 	Courses            []CourseResponseDTO `json:"courses"`
 	Reviews            []ReviewResponseDTO `json:"reviews"`
 }

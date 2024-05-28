@@ -79,7 +79,7 @@ func FindAllMentor() ([]database.Mentors, error) {
 	}
 	return mentors, nil
 }
-
+// by user id
 func FindMentorByUserID(userID string) (database.Mentors, error) {
 	var mentor database.Mentors
 	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
@@ -109,6 +109,7 @@ func FindMentorByUserID(userID string) (database.Mentors, error) {
 	return mentor, nil
 }
 
+// by mentor id
 func FindMentorByID(mentorID string) (database.Mentors, error) {
 	var mentor database.Mentors
 	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
@@ -136,4 +137,31 @@ func FindMentorByID(mentorID string) (database.Mentors, error) {
 	}
 
 	return mentor, nil
+}
+
+func FindMentorByCourseID(courseID string) ([]database.Mentors, error) {
+	var mentors []database.Mentors
+	timeout, err := time.ParseDuration(os.Getenv("TIMEOUT"))
+	if err != nil {
+		return mentors, err
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	db := configs.GetDB().WithContext(ctx)
+	err = db.
+		Table("mentors").
+		Joins("JOIN mentor_courses ON mentors.id = mentor_courses.mentor_id").
+		Where("mentor_courses.course_id = ?", courseID).
+		Find(&mentors).
+		Error
+
+	//validasi timeout
+	if ctx.Err() == context.DeadlineExceeded {
+		return mentors, ctx.Err()
+	}
+	if err == gorm.ErrRecordNotFound {
+		return mentors, err
+	}
+	return mentors, nil
 }

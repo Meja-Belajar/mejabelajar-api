@@ -5,7 +5,7 @@ import (
 )
 
 type CourseResponseDTO struct {
-	CourseID        string    `json:"course_id"`
+	CourseID        string  `json:"course_id"`
 	Name            string    `json:"name"`
 	Detail          string    `json:"detail"`
 	Rating          float64   `json:"rating"`
