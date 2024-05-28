@@ -198,9 +198,9 @@ func CreateBooking(ctx context.Context, bookingData requests.NewBookingRequestDT
 		PaymentStatus: bookingData.Invoice.Payment_status,
 		PaymentAmount: bookingData.Invoice.Payment_amount,
 		PaymentFee:    0.007 * bookingData.Invoice.Payment_amount,
+		PaymentTotal:  bookingData.Invoice.Payment_amount+0.007*bookingData.Invoice.Payment_amount,
 	}
-	invoice.PaymentTotal = invoice.PaymentAmount + invoice.PaymentFee
-
+	
 	err := configs.DB.Create(&invoice).Error
 	if err != nil {
 		return 500, outputs.InternalServerErrorOutput{Message: "Internal Server Error"}
