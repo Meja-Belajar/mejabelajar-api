@@ -38,7 +38,7 @@ func RegisterUser(AddUserRequestDTO requests.RegisterUserRequestDTO) (int, inter
 
 	//validasi email belum terdaftar
 	if err == nil {
-		return utils.HandleTimeout(err)
+		return utils.HandleConflict("Email already registered")
 	}
 
 	// buat user baru

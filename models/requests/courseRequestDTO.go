@@ -9,12 +9,8 @@ type GetCourseRequestDTO struct {
 type AddCourseRequestDTO struct {
 	Name            string    `json:"name" form:"name" binding:"required"`
 	Detail          string    `json:"detail" form:"detail" binding:"required"`
-	Rating          float64   `json:"rating" form:"rating" binding:"required"`
-	HourlyRate      float64   `json:"hourlyrate" form:"hourlyrate" binding:"required"`
-	CourseStartTime time.Time `json:"coursestarttime" form:"coursestarttime" binding:"required"`
-	CourseEndTime   time.Time `json:"courseendtime" form:"courseendtime" binding:"required"`
-	IsActive        bool      `json:"isactive" form:"isactive" binding:"required"`
-	CreatedBy       string    `json:"createdby" form:"createdby" binding:"required"`
+	IsActive        bool      `json:"isactive" form:"isactive" binding:"omitempty"`
+	CreatedBy       string    `json:"createdby" form:"createdby" binding:"omitempty"`
 }
 
 type UpdateCourseRequestDTO struct {
